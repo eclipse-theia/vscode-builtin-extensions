@@ -1,0 +1,30 @@
+{
+  "name": "vscode-builtin-extensions",
+  "keywords": [
+    "theia-extension"
+  ],
+  "version": "0.0.0",
+  "files": [
+    "lib",
+    "src",
+    "extensions"
+  ],
+  "dependencies": {
+    "@theia/plugin-ext-vscode": "0.4.0-next.c5d44a81"
+  },
+  "devDependencies": {
+    "rimraf": "latest",
+    "typescript": "latest"
+  },
+  "scripts": {
+    "prepare": "yarn run clean && yarn run build",
+    "clean": "rimraf lib",
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "theiaExtensions": [
+    {
+      "backend": "lib/node/vscode-builtin-extensions-backend-module"
+    }
+  ]
+}

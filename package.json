@@ -1,0 +1,19 @@
+{
+    "private": true,
+    "scripts": {
+        "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build",
+        "build": "lerna run prepare",
+        "build:extensions": "cd vscode && yarn && npx gulp compile-extensions-build",
+        "bundle:extensions": "cd vscode && node ../bundle-extensions.js",
+        "rebuild:browser": "theia rebuild:browser",
+        "rebuild:electron": "theia rebuild:electron"
+    },
+    "devDependencies": {
+        "lerna": "2.4.0"
+    },
+    "workspaces": [
+        "vscode-builtin-extensions",
+        "browser-app",
+        "electron-app"
+    ]
+}
