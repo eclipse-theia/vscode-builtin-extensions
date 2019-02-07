@@ -17,6 +17,17 @@ Install yarn.
 
     npm install -g yarn
 
+Install vscode prerequisite dependencies.
+
+    https://github.com/Microsoft/vscode/wiki/How-to-Contribute#prerequisites
+
+## Build
+
+    cd vscode-builtin-extensions
+    git submodule init
+    git submodule update
+    yarn
+
 ## Running the browser example
 
     yarn rebuild:browser
