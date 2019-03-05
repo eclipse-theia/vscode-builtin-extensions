@@ -2,7 +2,9 @@
 
 This extension contributes built-in VS Code extensions to Theia.
 
-## Getting started
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/theia-ide/vscode-builtin-extensions)
+
+## Getting started (locally)
 
 Install [nvm](https://github.com/creationix/nvm#install-script).
 
@@ -17,15 +19,18 @@ Install yarn.
 
     npm install -g yarn
 
+Install vscode.
+
+    cd vscode-builtin-extensions
+    git submodule init
+    git submodule update
+
 Install vscode prerequisite dependencies.
 
     https://github.com/Microsoft/vscode/wiki/How-to-Contribute#prerequisites
 
 ## Build
 
-    cd vscode-builtin-extensions
-    git submodule init
-    git submodule update
     yarn
 
 ## Running the browser example

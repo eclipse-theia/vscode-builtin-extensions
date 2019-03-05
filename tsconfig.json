@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "noUnusedLocals": true,
+        "emitDecoratorMetadata": true,
+        "downlevelIteration": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es5",
+        "lib": [
+            "es6"
+        ],
+        "sourceMap": true,
+        "rootDir": "src",
+        "allowJs": true
+    },
+    "include": [
+        "src"
+    ]
+}

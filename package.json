@@ -4,11 +4,13 @@
         "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build",
         "build": "lerna run prepare",
         "build:extensions": "cd vscode && yarn && npx gulp compile-extensions-build",
-        "bundle:extensions": "cd vscode && node ../bundle-extensions.js",
+        "bundle:extensions": "node ./src/bundle.js",
+        "republish:extensions": "node ./src/republish.js",
         "rebuild:browser": "theia rebuild:browser",
         "rebuild:electron": "theia rebuild:electron"
     },
     "devDependencies": {
+        "@types/node": "^8.0.0",
         "lerna": "2.4.0"
     },
     "workspaces": [
