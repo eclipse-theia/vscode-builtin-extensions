@@ -3,14 +3,14 @@
   "name": "browser-app",
   "version": "0.0.0",
   "dependencies": {
-    "vscode-builtin-extensions": "0.0.0"
+    "vscode-builtin-extensions": "0.0.0.0"
   },
   "devDependencies": {
-    "@theia/cli": "0.4.0-next.c5d44a81"
+    "@theia/cli": "next"
   },
   "scripts": {
     "prepare": "theia build --mode development",
-    "start": "theia start",
+    "start": "theia start --hostname=0.0.0.0",
     "watch": "theia build --watch --mode development"
   },
   "theia": {

@@ -10,7 +10,7 @@
     "extensions"
   ],
   "dependencies": {
-    "@theia/plugin-ext-vscode": "0.4.0-next.c5d44a81"
+    "@theia/plugin-ext-vscode": "next"
   },
   "devDependencies": {
     "rimraf": "latest",
