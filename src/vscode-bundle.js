@@ -27,4 +27,3 @@ rimraf.sync(extensions());
     await run('yarn', ['install', '--production'], extensions('ms-vscode.node-debug'));
     await run('yarn', ['install', '--production'], extensions('ms-vscode.node-debug2'));
 })();
-

@@ -3,7 +3,8 @@
     "scripts": {
         "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build",
         "build": "lerna run prepare",
-        "build:extensions": "cd vscode && yarn && npx gulp compile-extensions-build",
+        "build:extensions": "yarn --cwd vscode && yarn compile:extensions",
+        "compile:extensions": "node ./src/compile.js",
         "bundle:extensions": "node ./src/bundle.js",
         "republish:extensions": "node ./src/republish.js",
         "rebuild:browser": "theia rebuild:browser",
