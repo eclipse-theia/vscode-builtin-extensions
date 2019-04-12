@@ -1,6 +1,13 @@
 image:
-  file: Dockerfile
+  file: .gitpod.dockerfile
 ports:
-  - port: 3000
+- port: 3000
+- port: 6080
+  onOpen: ignore
+- port: 5900
+  onOpen: ignore
 tasks:
-  - init: yarn
+- init: >
+    yarn
+  command: >
+    jwm &
