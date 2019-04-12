@@ -3,7 +3,7 @@
   "name": "browser-app",
   "version": "0.0.0",
   "dependencies": {
-    "vscode-builtin-extensions": "0.0.0.0"
+    "vscode-builtin-extensions": "0.0.0"
   },
   "devDependencies": {
     "@theia/cli": "next"
