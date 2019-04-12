@@ -11,3 +11,6 @@ tasks:
     yarn
   command: >
     jwm &
+github:
+  prebuilds:
+    branches: false
