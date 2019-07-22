@@ -4,6 +4,8 @@
 // @ts-check
 const fs = require('fs');
 const os = require('os');
+const path = require('path');
+const archiver = require('archiver');
 const { extensions, run } = require('./paths.js');
 
 (async () => {
@@ -18,11 +20,36 @@ const { extensions, run } = require('./paths.js');
         if (!fs.existsSync(pckPath)) {
             continue;
         }
+        const nodeModulesPath = extensions(extension, 'node_modules');
+        if (fs.existsSync(nodeModulesPath)) {
+            try {
+                await new Promise((resolve, reject) => {
+                    try {
+                        const nodeModulesZip = fs.createWriteStream(extensions(extension, 'vscode_node_modules.zip'));
+                        const archive = archiver('zip');
+                        nodeModulesZip.on('close', () => {
+                            console.log(archive.pointer() + ' total bytes');
+                            console.log('archiver has been finalized and the output file descriptor has closed.');
+                            resolve();
+                        });
+                        archive.on('error', reject);
+                        archive.pipe(nodeModulesZip);
+                        archive.glob('**', { cwd: nodeModulesPath });
+                        archive.finalize();
+                    } catch (e) {
+                        reject(e);
+                    }
+                });
+            } catch (e) {
+                console.error(e);
+                continue;
+            }
+        }
         const originalContent = fs.readFileSync(pckPath, 'utf-8');
         const pck = JSON.parse(originalContent);
         pck.name = '@theia/vscode-builtin-' + pck.name;
         // bump to publish
-        pck.version = '0.1.0';
+        pck.version = '0.2.1';
 
         console.log(pck.name, ': publishing...');
         try {
