@@ -6,7 +6,8 @@
         "build:extensions": "yarn --cwd vscode && yarn compile:extensions",
         "compile:extensions": "node ./src/compile.js",
         "bundle:extensions": "node ./src/bundle.js",
-        "republish:extensions": "node ./src/republish.js",
+        "publish:latest": "node ./src/publish.js --tag=latest",
+        "publish:next": "node ./src/publish.js --tag=next",
         "rebuild:browser": "theia rebuild:browser",
         "rebuild:electron": "theia rebuild:electron"
     },
