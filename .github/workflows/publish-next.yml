@@ -13,6 +13,10 @@ jobs:
       NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
     steps:
       - uses: actions/checkout@v1
+      - run: |
+          git submodule init
+          git submodule update
+        name: Checkout VS Code
       # should be aligned with https://github.com/microsoft/vscode/blob/8031c495a65de120560d27703c415eb44c3a99a1/.github/workflows/ci.yml#L22-L32
       - run: |
           sudo apt-get update
