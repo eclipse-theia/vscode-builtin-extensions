@@ -1,4 +1,4 @@
-name: Publish Next
+name: publish-vscode-built-in-extensions
 on:
   schedule:
     - cron: "0 0 * * *"
