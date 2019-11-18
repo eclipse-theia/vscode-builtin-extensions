@@ -15,22 +15,22 @@ jobs:
       - uses: actions/checkout@v1
       # should be aligned with https://github.com/microsoft/vscode/blob/8031c495a65de120560d27703c415eb44c3a99a1/.github/workflows/ci.yml#L22-L32
       - run: |
-        sudo apt-get update
-        sudo apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 dbus xvfb libgtk-3-0
-        sudo cp build/azure-pipelines/linux/xvfb.init /etc/init.d/xvfb
-        sudo chmod +x /etc/init.d/xvfb
-        sudo update-rc.d xvfb defaults
-        sudo service xvfb start
-      name: Setup Build Environment
-    - uses: actions/setup-node@v1
-      with:
-        node-version: 10
-    - run: |
-        cd vscode
-        git fetch
-        git reset --hard origin/master
-      name: Reset to latest VS Code
-    - run: yarn
-      name: Bundle Extensions
-    - run: yarn publish:next
-      name: Deploy Extensions
+          sudo apt-get update
+          sudo apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 dbus xvfb libgtk-3-0
+          sudo cp build/azure-pipelines/linux/xvfb.init /etc/init.d/xvfb
+          sudo chmod +x /etc/init.d/xvfb
+          sudo update-rc.d xvfb defaults
+          sudo service xvfb start
+        name: Setup Build Environment
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      - run: |
+          cd vscode
+          git fetch
+          git reset --hard origin/master
+        name: Reset to latest VS Code
+      - run: yarn
+        name: Bundle Extensions
+      - run: yarn publish:next
+        name: Deploy Extensions
