@@ -1,11 +1,11 @@
 {
     "private": true,
     "scripts": {
-        "prepare": "NODE_OPTIONS=--max-old-space-size=8192 && yarn build:extensions && yarn bundle:extensions && yarn build",
+        "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build",
         "build": "lerna run prepare",
         "build:extensions": "yarn --cwd vscode && yarn compile:extensions",
-        "compile:extensions": "node ./src/compile.js",
-        "bundle:extensions": "node ./src/bundle.js",
+        "compile:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/compile.js",
+        "bundle:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/bundle.js",
         "publish:latest": "node ./src/publish.js --tag=latest",
         "publish:next": "node ./src/publish.js --tag=next",
         "rebuild:browser": "theia rebuild:browser",
