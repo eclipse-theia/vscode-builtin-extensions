@@ -6,7 +6,8 @@
     "vscode-builtin-extensions": "0.0.0"
   },
   "devDependencies": {
-    "@theia/cli": "next"
+    "@theia/cli": "next",
+    "@theia/electron": "next"
   },
   "scripts": {
     "prepare": "theia build --mode development",
