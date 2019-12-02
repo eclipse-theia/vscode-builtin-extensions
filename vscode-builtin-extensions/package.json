@@ -1,5 +1,9 @@
 {
   "name": "vscode-builtin-extensions",
+  "publisher": "theia-ide",
+  "engines": {
+    "vscode": "^1.33.0"
+  },
   "keywords": [
     "theia-extension"
   ],
@@ -9,18 +13,23 @@
     "src",
     "extensions"
   ],
-  "dependencies": {
-    "@theia/plugin-ext-vscode": "next"
-  },
+  "dependencies": {},
   "devDependencies": {
     "rimraf": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "inversify": "^5.0.1",
+    "vsce": "1.70.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theia-ide/vscode-builtin-extensions.git"
   },
   "scripts": {
     "prepare": "yarn run clean && yarn run build",
     "clean": "rimraf lib",
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "package": "vsce package -o ../"
   },
   "theiaExtensions": [
     {
