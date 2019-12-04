@@ -60,6 +60,7 @@ let version = '0.2.1';
         const pck = JSON.parse(originalContent);
         pck.name = '@theia/vscode-builtin-' + pck.name;
         pck.version = version;
+        delete pck.private;
 
         console.log(pck.name, ': publishing...');
         try {
