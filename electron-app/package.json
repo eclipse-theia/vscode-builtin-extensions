@@ -3,7 +3,7 @@
   "name": "electron-app",
   "version": "0.0.0",
   "dependencies": {
-    "vscode-builtin-extensions": "0.0.0"
+    "@theia/plugin-ext-vscode": "next"
   },
   "devDependencies": {
     "@theia/cli": "next",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "prepare": "theia build --mode development",
-    "start": "theia start --hostname=0.0.0.0",
+    "start": "theia start --plugins=local-dir:../out --hostname=0.0.0.0",
     "watch": "theia build --watch --mode development"
   },
   "theia": {

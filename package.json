@@ -1,25 +1,31 @@
 {
-    "private": true,
-    "scripts": {
-        "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build",
-        "build": "lerna run prepare",
-        "build:extensions": "yarn --cwd vscode && yarn compile:extensions",
-        "compile:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/compile.js",
-        "bundle:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/bundle.js",
-        "publish:latest": "node ./src/publish.js --tag=latest",
-        "publish:next": "node ./src/publish.js --tag=next",
-        "rebuild:browser": "theia rebuild:browser",
-        "rebuild:electron": "theia rebuild:electron"
-    },
-    "devDependencies": {
-        "@types/archiver": "^3.0.0",
-        "@types/node": "^8.0.0",
-        "archiver": "^3.0.3",
-        "lerna": "2.4.0"
-    },
-    "workspaces": [
-        "vscode-builtin-extensions",
-        "browser-app",
-        "electron-app"
-    ]
+  "private": true,
+  "version": "0.3.0-next.7d7903ea53",
+  "scripts": {
+    "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build",
+    "build": "lerna run prepare",
+    "build:extensions": "yarn --cwd vscode && yarn compile:extensions",
+    "compile:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/compile.js",
+    "bundle:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/bundle.js",
+    "publish:latest": "node ./src/publish.js --tag=latest",
+    "publish:next": "node ./src/publish.js --tag=next",
+    "rebuild:browser": "theia rebuild:browser",
+    "rebuild:electron": "theia rebuild:electron",
+    "package-vsix:latest": "node src/package-vsix.js --tag latest",
+    "package-vsix:next": "node src/package-vsix.js --tag next"
+  },
+  "devDependencies": {
+    "@types/archiver": "^3.0.0",
+    "@types/node": "^8.0.0",
+    "archiver": "^3.0.3",
+    "lerna": "2.4.0",
+    "vsce": "1.70.0",
+    "fs-extra": "8.1.0",
+    "release-it": "12.4.3"
+  },
+  "workspaces": [
+    "vscode-builtin-extensions",
+    "browser-app",
+    "electron-app"
+  ]
 }

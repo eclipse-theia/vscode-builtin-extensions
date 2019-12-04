@@ -8,9 +8,10 @@ ports:
   onOpen: ignore
 tasks:
 - init: >
-    yarn
+    yarn && yarn package-vsix:next
   command: >
     jwm &
+    yarn --cwd browser-app start ../ --hostname=0.0.0.0
 github:
   prebuilds:
     branches: false

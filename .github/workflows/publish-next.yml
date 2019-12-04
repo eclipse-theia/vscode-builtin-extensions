@@ -11,8 +11,9 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      version: 1.2.3
     steps:
       - uses: actions/checkout@v1
       - run: |
@@ -38,5 +39,10 @@ jobs:
         name: Reset to latest VS Code
       - run: yarn
         name: Bundle Extensions
-      - run: yarn publish:next
-        name: Deploy Extensions
+      # - run: yarn publish:next
+        # name: Deploy Extensions
+      - run: yarn package-vsix:next
+        name: Bundle extensions in individual .vsix 
+      - run: |
+          DEBUG=release-it:* yarn run release-it
+        name: Publish on GH Release
