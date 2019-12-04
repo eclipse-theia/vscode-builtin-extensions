@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build",
+        "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build && yarn package-vsix:next",
         "build": "lerna run prepare",
         "build:extensions": "yarn --cwd vscode && yarn compile:extensions",
         "compile:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/compile.js",
@@ -9,13 +9,19 @@
         "publish:latest": "node ./src/publish.js --tag=latest",
         "publish:next": "node ./src/publish.js --tag=next",
         "rebuild:browser": "theia rebuild:browser",
-        "rebuild:electron": "theia rebuild:electron"
+        "rebuild:electron": "theia rebuild:electron",
+        "package-vsix:latest": "node src/package-vsix.js --tag latest",
+        "package-vsix:next": "node src/package-vsix.js --tag next",
+        "start:browser": "yarn rebuild:browser && (cd browser-app && yarn start)",
+        "start:electron": "yarn rebuild:electron && (cd electron-app && yarn start)"
     },
     "devDependencies": {
         "@types/archiver": "^3.0.0",
         "@types/node": "^8.0.0",
         "archiver": "^3.0.3",
-        "lerna": "2.4.0"
+        "lerna": "2.4.0",
+        "vsce": "1.70.0",
+        "fs-extra": "8.1.0"
     },
     "workspaces": [
         "vscode-builtin-extensions",

@@ -11,6 +11,12 @@ function root(...paths) {
 /**
  * @type {(paths: string[]) => string}
  */
+function dist(...paths) {
+    return root('dist', ...paths);
+}
+/**
+ * @type {(paths: string[]) => string}
+ */
 function src(...paths) {
     return root('src', ...paths);
 }
@@ -49,4 +55,4 @@ function run(command, args, cwd = process.cwd()) {
     });
 }
 
-module.exports = { root, src, vscode, theiaExtension, extensions, run };
+module.exports = { root, dist, src, vscode, theiaExtension, extensions, run };
