@@ -17,7 +17,7 @@ const repository = {
 };
 
 // bump to publish
-let version = '0.2.1';
+let version = '1.39.1-prel';
 
 (async () => {
 

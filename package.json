@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build && yarn package-vsix:next",
+        "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build && yarn package-vsix:latest",
         "build": "lerna run prepare",
         "build:extensions": "yarn --cwd vscode && yarn compile:extensions",
         "compile:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/compile.js",
