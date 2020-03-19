@@ -3,7 +3,7 @@ const fs = require('fs');
 const rimraf = require('../vscode/node_modules/rimraf');
 const vfs = require('../vscode/node_modules/vinyl-fs');
 const ext = require('../vscode/build/lib/extensions');
-const { root, theiaExtension, extensions } = require('./paths.js')
+const { root, theiaExtension, extensions, run } = require('./paths.js')
 
 const backupNodeModules = () => {
     const move = (src, dest) => fs.existsSync(src) && fs.renameSync(src, dest);
@@ -23,4 +23,5 @@ rimraf.sync(extensions());
         stream.on('error', reject);
         stream.on('end', resolve);
     });
+    await run('yarn', ['install', '--production'], extensions('emmet'));
 })();
