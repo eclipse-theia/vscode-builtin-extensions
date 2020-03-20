@@ -3235,6 +3235,11 @@ caniuse-lite@^1.0.30001010:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001012.tgz#653ec635e815b9e0fb801890923b0c2079eb34ec"
   integrity sha512-7RR4Uh04t9K1uYRWzOJmzplgEOAXbfK72oVNokCdMzA67trrhPzy93ahKk1AWHiA0c58tD2P+NHqxrA8FZ+Trg==
 
+capitalize@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/capitalize/-/capitalize-2.0.2.tgz#d66855724fafc09f7f913131f89000a7879e6954"
+  integrity sha512-kX+ZpaqUSx1YcAKnZ6J4HZY0yaYc+RnIVkO+3ckeerj8lW0T+9GmyRekRF3PzH+46HHdsz2ma0S0NfTby/rojA==
+
 caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"

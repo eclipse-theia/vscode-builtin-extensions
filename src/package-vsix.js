@@ -5,6 +5,7 @@
 const fs = require('fs-extra')
 const os = require('os');
 const yargs = require('yargs');
+const capitalize = require('capitalize');
 const { root, dist, extensions, run, vscode } = require('./paths.js');
 
 const { tag } = yargs.option('tag', {
@@ -63,23 +64,38 @@ let version = '1.39.1-prel';
     }
 
     for (const extension of fs.readdirSync(extensions())) {
+        const extDisplayName = capitalize.words(extension.replace('-', ' ')) + " (built-in)"
         const pckPath = extensions(extension, 'package.json');
+        const nlsPath = extensions(extension, 'package.nls.json');
+        const readmePath = extensions(extension, 'README.md');
+        const readmeContent = genReadme(extension);
+
         if (!fs.existsSync(pckPath)) {
             continue;
         }
 
         const originalContent = fs.readFileSync(pckPath, 'utf-8');
         const pck = JSON.parse(originalContent);
-        // warning: do change pck.publisher - it's part of the 
-        // extension id and used in places to access some extensions
+        const nlsContent = fs.readFileSync(nlsPath, 'utf-8');
+        const nls = JSON.parse(nlsContent);
+        
+        // note: do change pck.publisher - it's part of the key used to
+        // lookup extensions, and so changing it may prevent dependent extensions
+        // to not find it
+        // pck.displayName = nls.displayName || extDisplayName + " (built-in)";
+        pck.displayName = nls.displayName? nls.displayName + " (built-in)" : extDisplayName ;
+        pck.description = nls.description || "Built-in extension that adds (potentially basic) support for " + capitalize(pck.name);
+        pck.keywords = ["Built-in"];
         pck.repository = repository;
         pck.version = version;
+        
         // avoid having vsce run scripts during packaging, such as "vscode-prepublish"
         pck.scripts = {};
 
         console.log('packaging vsix: ', pck.name, ' ...');
         try {
             fs.writeFileSync(pckPath, JSON.stringify(pck, undefined, 2), 'utf-8');
+            fs.writeFileSync(readmePath, readmeContent, 'utf-8');
             await run(vsce, ['package', '--yarn', '-o', dist()], extensions(extension));
             result.push('sucessfully packaged: ' + pck.name);
         } catch (e) {
@@ -89,9 +105,20 @@ let version = '1.39.1-prel';
             };
         } finally {
             fs.writeFileSync(pckPath, originalContent, 'utf-8');
+            fs.removeSync(readmePath);
         }
 
     }
     
     console.log(result.join(os.EOL));
 })();
+
+// a very basic README to add to the extension to explain what it is
+function genReadme(ext) {
+    return `# Built-in extension: ${ext}
+        
+Built-in are extensions that are included in \`VS Code\` and \`Code OSS\` They are part of the [vscode GitHub repository](https://github.com/microsoft/vscode/tree/master/extensions) and built along with it. 
+
+So if you are running \`VS Code\` or \`Code OSS\` you probably do not need to add them, but other editors might`;
+    
+}
