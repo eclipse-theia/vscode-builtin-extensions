@@ -97,17 +97,22 @@ Publish packages with lerna to update versions properly across local packages, [
 
 ## Package built-ins as individual `.vsix`
 
-If required, step the version to be used for the extensions in `src/package-vsix.js`
+The version of the packaged built-ins is automatically taken from the VS Code's `package.json` and will also include the SHA of the HEAD VS Code commit if packaging a "next" version.
 
-    // bump to publish
-    let version = '0.2.1';
+To package, use one of the following:
 
-Generate .vsix extensions
+Latest / solid revision:
 
     yarn package-vsix:latest
 
-or
+Next / interim revision:
 
     yarn package-vsix:next
 
-The `.vsix` extensions will be under folder `./dist`
+The generated `.vsix` will be under folder `./dist`
+
+## Publishing VS Code "Builtins" to open-vsx
+
+After generating the `.vsix` (see above), you may examine/test the extensions under folder `dist`. Remove any that you do not wish to be published (e.g. those not working well). When ready proceed with publishing:
+
+    yarn publish:latest
