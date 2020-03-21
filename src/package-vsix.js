@@ -17,26 +17,27 @@ const repository = {
     "url": "https://github.com/theia-ide/vscode-builtin-extensions"
 };
 
-// bump to publish
-let version = '1.39.1-prel';
+const vscodePck = JSON.parse(fs.readFileSync(vscode('package.json'), 'utf-8'));
+let version = vscodePck.version || '0.0.1';
 
 (async () => {
-
     const bin = await run('yarn', ['bin'], root());
     const vsce = bin.trim() + '/vsce';
 
+    // use VS Code version and SHA when publishing next
     if (tag === 'next') {
         const shortRevision = (await run('git', ['rev-parse', '--short', 'HEAD'], vscode())).trim();
-        const [, minor] = version.split('.');
-        version = `0.${Number(minor) + 1}.0-next.${shortRevision}`;
+        const [major, minor,] = version.split('.');
+        version = `${major}.${Number(minor) + 1}.0-next.${shortRevision}`;
     }
+    console.log(`Packaging builtins from VS Code version: ${version}\n`);
 
     const result = [];
 
     // typescript-language-features ext needs "extensions/node_modules" content
     // and a bit of massaging to work as standalone .vsix, so that the TS LS will 
-    // be packaged and found at runtime. 
-    // Basically replace this:
+    // be packaged-along and available to the extension at runtime. 
+    // Basically we replace this:
     //      "vscode.typescript-language-features",["..","node_modules"]
     // with this:
     //      "vscode.typescript-language-features",[".","deps"]
@@ -56,7 +57,7 @@ let version = '1.39.1-prel';
         }
         else {
             console.log('TS language extension is already patched')
-        }        
+        }
     }
 
     if (!fs.existsSync(dist())) {
@@ -78,24 +79,29 @@ let version = '1.39.1-prel';
         const pck = JSON.parse(originalContent);
         const nlsContent = fs.readFileSync(nlsPath, 'utf-8');
         const nls = JSON.parse(nlsContent);
-        
+
         // note: do change pck.publisher - it's part of the key used to
         // lookup extensions, and so changing it may prevent dependent extensions
-        // to not find it
-        // pck.displayName = nls.displayName || extDisplayName + " (built-in)";
-        pck.displayName = nls.displayName? nls.displayName + " (built-in)" : extDisplayName ;
+        // from finding it
+        pck.displayName = nls.displayName ? nls.displayName + " (built-in)" : extDisplayName;
         pck.description = nls.description || "Built-in extension that adds (potentially basic) support for " + capitalize(pck.name);
         pck.keywords = ["Built-in"];
         pck.repository = repository;
         pck.version = version;
-        
+        pck.license = 'SEE LICENSE IN LICENSE-vscode.txt';
+        if (tag === 'next') {
+            pck.preview = 'true';
+        }
+
         // avoid having vsce run scripts during packaging, such as "vscode-prepublish"
         pck.scripts = {};
 
+        const extLicense = extensions(extension, 'LICENSE-vscode.txt');
         console.log('packaging vsix: ', pck.name, ' ...');
         try {
             fs.writeFileSync(pckPath, JSON.stringify(pck, undefined, 2), 'utf-8');
             fs.writeFileSync(readmePath, readmeContent, 'utf-8');
+            fs.copyFileSync(vscode('LICENSE.txt'), extLicense);
             await run(vsce, ['package', '--yarn', '-o', dist()], extensions(extension));
             result.push('sucessfully packaged: ' + pck.name);
         } catch (e) {
@@ -106,19 +112,32 @@ let version = '1.39.1-prel';
         } finally {
             fs.writeFileSync(pckPath, originalContent, 'utf-8');
             fs.removeSync(readmePath);
+            fs.removeSync(extLicense);
         }
-
     }
-    
+
     console.log(result.join(os.EOL));
 })();
 
 // a very basic README to add to the extension to explain what it is
 function genReadme(ext) {
     return `# Built-in extension: ${ext}
-        
-Built-in are extensions that are included in \`VS Code\` and \`Code OSS\` They are part of the [vscode GitHub repository](https://github.com/microsoft/vscode/tree/master/extensions) and built along with it. 
 
-So if you are running \`VS Code\` or \`Code OSS\` you probably do not need to add them, but other editors might`;
+## Disclaimer
     
+Microsoft does not endorse, build, test or publish this extension, nor are they involved with it in any other way. The only association is that they own the copyright of these extensions and the rest of vscode's [source code](https://github.com/microsoft/vscode/tree/master/extensions), which they released under the [MIT License](https://github.com/microsoft/vscode/blob/master/LICENSE.txt). A copy of the license is included in this extension. See LICENSE-vscode.txt
+
+    "Original VS Code sources are Copyright (c) 2015 - present Microsoft Corporation."
+
+
+## What is this extension? Do I need it?
+
+TL;DR: If you are running \`VS Code\`, \`Code OSS\` or derived product built from the VS Code repository, such as [VSCodium](https://github.com/VSCodium/vscodium), you do not need to install this extension since it's already present - "built-in".
+
+Built-in extensions are built-along and included in \`VS Code\` and \`Code OSS\`. In consequence they may be expected to be present and used by other extensions. They are part of the [vscode GitHub repository](https://github.com/microsoft/vscode/tree/master/) and generally contribute basic functionality such as textmate grammars, used for syntax-highlighting, for some of the most popular programming languages. In some cases, more substantial features are contributed through built-in extensions (e.g. Typescript, Markdown, git, ...). Please see the description above to learn what this specific extension does.
+
+To learn more about built-in extensions, including how they are built and packaged, please see [vscode-builtin-extensions](https://github.com/theia-ide/vscode-builtin-extensions).
+
+`;
+
 }
