@@ -13,30 +13,22 @@
 // @ts-check
 const fs = require('fs')
 const os = require('os');
-const yargs = require('yargs');
-const { root, dist, run } = require('./paths.js');
-
-const { tag } = yargs.option('tag', {
-    choices: ['latest', 'next']
-}).demandOption('tag').argv;
+const ovsx = require('ovsx');
+const { dist } = require('./paths.js');
 
 (async () => {
-    if (tag === 'next') {
-        console.error("Open VSX does not support publishing 'next' versions at this time");
-        return;
-    }
-
-    const bin = await run('yarn', ['bin'], root());
-    const ovsx = bin.trim() + '/ovsx';
     const result = [];
 
     for (const vsix of fs.readdirSync(dist())) {
+        console.log('publishing: ', dist(vsix), ' ...');
         try {
-            console.log('publishing: ', dist(vsix), ' ...');
-            await run(ovsx, ['publish', dist(vsix)]);
-        } catch (e) {
-            result.push(`failed to publish ${vsix}`);
+            await ovsx.publish({ extensionFile: vsix, yarn: true });
+        } catch (error) {
+            result.push(`failed to publish ${vsix}: ${error}`);
+            result.push('Stopping here. Fix the problem and retry.');
+            break;
         }
+        result.push(`Successfully published ${vsix}`);        
     }
     console.log(result.join(os.EOL));
 })();

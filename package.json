@@ -1,24 +1,26 @@
 {
     "private": true,
     "scripts": {
-        "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build && yarn package-vsix:next",
+        "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build",
         "build": "lerna run prepare",
         "build:extensions": "yarn --cwd vscode && yarn compile:extensions",
         "compile:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/compile.js",
         "bundle:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/bundle.js",
-        "publish": "yarn && yarn publish:latest",
-        "publish:latest": "node ./src/publish-vsix.js --tag=latest",
+        "publish": "yarn && yarn publish:vsix",
+        "publish:vsix": "node ./src/publish-vsix.js",
         "publish:next": "node ./src/publish.js --tag=next",
         "rebuild:browser": "theia rebuild:browser",
         "rebuild:electron": "theia rebuild:electron",
         "package-vsix:latest": "node src/package-vsix.js --tag latest",
         "package-vsix:next": "node src/package-vsix.js --tag next",
         "start:browser": "yarn rebuild:browser && (cd browser-app && yarn start)",
-        "start:electron": "yarn rebuild:electron && (cd electron-app && yarn start)"
+        "start:electron": "yarn rebuild:electron && (cd electron-app && yarn start)",
+        "clean": "git clean -ffdx"
     },
     "devDependencies": {
         "@types/archiver": "^3.0.0",
         "@types/node": "^8.0.0",
+        "@types/htmlparser2": "3.10.1",
         "archiver": "^3.0.3",
         "lerna": "2.4.0",
         "vsce": "1.70.0",
@@ -30,5 +32,8 @@
         "vscode-builtin-extensions",
         "browser-app",
         "electron-app"
-    ]
+    ],
+    "resolutions": {
+      "htmlparser2" : "3.10.1"
+    }
 }

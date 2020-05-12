@@ -8,10 +8,14 @@ ports:
   onOpen: ignore
 tasks:
 - init: >
-    yarn
-  command: >
+    git submodule update --remote &&
+    yarn && 
+    yarn package-vsix:next
+- command: >
     jwm &
     yarn start:browser
 github:
   prebuilds:
     branches: false
+    addLabel: true
+    addBadge: true

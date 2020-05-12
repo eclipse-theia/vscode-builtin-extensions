@@ -95,24 +95,26 @@ Publish packages with lerna to update versions properly across local packages, [
 
     npx lerna publish
 
-## Package built-ins as individual `.vsix`
+## Packaging vscode-builtin-extensions as individual `.vsix`
 
-The version of the packaged built-ins is automatically taken from the VS Code's `package.json` and will also include the SHA of the HEAD VS Code commit if packaging a "next" version.
+The version of the packaged built-ins is taken from VS Code's `package.json` and adjusted automatically when packaging a `next` revision.
 
-To package, use one of the following:
+Latest / solid revision example:
 
-Latest / solid revision:
-
+    cd vscode; git checkout 1.45.0; cd ..
     yarn package-vsix:latest
 
-Next / interim revision:
+Next / interim revision example:
 
+    cd vscode; git checkout d69a79b73808559a91206d73d7717ff5f798f23c; cd ..
     yarn package-vsix:next
 
 The generated `.vsix` will be under folder `./dist`
 
-## Publishing VS Code "Builtins" to open-vsx
+## Publishing vscode-builtin-extensions to open-vsx
 
-After generating the `.vsix` (see above), you may examine/test the extensions under folder `dist`. Remove any that you do not wish to be published (e.g. those not working well). When ready proceed with publishing:
+The `ovsx` client is used to publish to an open-vsx registry. By default https://open-vsx.org is used. To use another open-vsx registry, set its URL in environment variable `OVSX_REGISTRY_URL`. Use enviromnent variable `OVSX_PAT` to store the personal access token obtained from the registry.
 
-    yarn publish:latest
+After packaging the extensions as `.vsix` (see above), you may examine/test them under folder `dist`. Remove any that you do not wish to be published (e.g. those not working well). When ready proceed with publishing:
+
+    yarn publish:vsix
