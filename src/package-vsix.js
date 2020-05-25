@@ -28,7 +28,7 @@ let version = vscodePck.version || '0.0.1';
     if (tag === 'next') {
         const shortRevision = (await run('git', ['rev-parse', '--short', 'HEAD'], vscode())).trim();
         const [major, minor,] = version.split('.');
-        version = `${major}.${Number(minor) + 1}.0-next.${shortRevision}`;
+        version = `${major}.${minor}.0-next.${shortRevision}`;
     }
     console.log(`Packaging builtins from VS Code version: ${version}\n`);
 
@@ -90,7 +90,7 @@ let version = vscodePck.version || '0.0.1';
         pck.version = version;
         pck.license = 'SEE LICENSE IN LICENSE-vscode.txt';
         if (tag === 'next') {
-            pck.preview = 'true';
+            pck.preview = true;
         }
 
         // avoid having vsce run scripts during packaging, such as "vscode-prepublish"
