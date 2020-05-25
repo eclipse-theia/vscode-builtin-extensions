@@ -22,11 +22,11 @@ const { dist } = require('./paths.js');
     for (const vsix of fs.readdirSync(dist())) {
         console.log('publishing: ', dist(vsix), ' ...');
         try {
-            await ovsx.publish({ extensionFile: vsix, yarn: true });
+            await ovsx.publish({ extensionFile: dist(vsix), yarn: true });
         } catch (error) {
-            result.push(`failed to publish ${vsix}: ${error}`);
-            result.push('Stopping here. Fix the problem and retry.');
-            break;
+            console.log(`failed to publish ${vsix}: ${error}`);
+            console.log('Stopping here. Fix the problem and retry.\n');
+            process.exit(1);
         }
         result.push(`Successfully published ${vsix}`);        
     }
