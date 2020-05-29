@@ -14,18 +14,21 @@
         "rebuild:electron": "theia rebuild:electron",
         "start:browser": "yarn rebuild:browser && (cd browser-app && yarn start)",
         "start:electron": "yarn rebuild:electron && (cd electron-app && yarn start)",
+        "checkout-latest-vscode-release": "node src/checkout-latest-vscode.js",
         "clean": "git clean -ffdx"
     },
     "devDependencies": {
         "@types/archiver": "^3.0.0",
         "@types/node": "^8.0.0",
         "@types/htmlparser2": "3.10.1",
+        "@types/node-fetch": "^2.5.7",
         "archiver": "^3.0.3",
         "lerna": "2.4.0",
         "vsce": "1.70.0",
         "fs-extra": "8.1.0",
         "capitalize": "^2.0.2",
-        "ovsx": "latest"
+        "ovsx": "latest",
+        "node-fetch": "^2.5.7"
     },
     "workspaces": [
         "vscode-builtin-extensions",
@@ -33,6 +36,6 @@
         "electron-app"
     ],
     "resolutions": {
-      "htmlparser2" : "3.10.1"
+        "htmlparser2": "3.10.1"
     }
 }

@@ -102,12 +102,12 @@ The version of the packaged built-ins is taken from VS Code's `package.json` and
 Latest / solid revision example:
 
     cd vscode; git checkout 1.45.0; cd ..
-    yarn package-vsix:latest
+    yarn; yarn package-vsix:latest
 
 Next / interim revision example:
 
     cd vscode; git checkout d69a79b73808559a91206d73d7717ff5f798f23c; cd ..
-    yarn package-vsix:next
+    yarn; yarn package-vsix:next
 
 The generated `.vsix` will be under folder `./dist`
 
