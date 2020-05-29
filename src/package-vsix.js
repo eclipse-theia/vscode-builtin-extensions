@@ -1,35 +1,39 @@
 /**
- * Package individual built-in VS Code extensions in .vsix packages
+ * Package individual built-in VS Code extensions in .vsix packages.
+ * It's assumed that the vscode git submodule has already been updated
+ * and the wanted commit/tag checkled-out, before the start of packaging.
  */
 // @ts-check
 const fs = require('fs-extra')
 const os = require('os');
 const yargs = require('yargs');
 const capitalize = require('capitalize');
-const { root, dist, extensions, run, vscode } = require('./paths.js');
+const { dist, extensions, vscode } = require('./paths.js');
+const { computeVersion, isPublished } = require('./version');
+const vsce = require('vsce');
 
 const { tag } = yargs.option('tag', {
     choices: ['latest', 'next']
 }).demandOption('tag').argv;
+
+// extensions we do not want to package/publish, that
+// would otherwise be
+const to_skip = new Set();
+to_skip.add('vscode-account');
+
+/**  package extensions even if found to be already published */
+const forcePackaging = false;
 
 const repository = {
     "type": "git",
     "url": "https://github.com/theia-ide/vscode-builtin-extensions"
 };
 
-const vscodePck = JSON.parse(fs.readFileSync(vscode('package.json'), 'utf-8'));
-let version = vscodePck.version || '0.0.1';
-
 (async () => {
-    const bin = await run('yarn', ['bin'], root());
-    const vsce = bin.trim() + '/vsce';
-
-    // use VS Code version and SHA when publishing next
-    if (tag === 'next') {
-        const shortRevision = (await run('git', ['rev-parse', '--short', 'HEAD'], vscode())).trim();
-        const [major, minor,] = version.split('.');
-        version = `${major}.${minor}.0-next.${shortRevision}`;
-    }
+    // compute the version we'll use, given the type of packaging
+    // (latest/solid vs next/preview) and current vscode git submodule
+    // commit checked-out
+    let version = await computeVersion(tag);
     console.log(`Packaging builtins from VS Code version: ${version}\n`);
 
     const result = [];
@@ -65,6 +69,23 @@ let version = vscodePck.version || '0.0.1';
     }
 
     for (const extension of fs.readdirSync(extensions())) {
+        if (to_skip.has(extension)) {
+            console.log(`  (skipping extension ${extension} as per configuration`);
+            continue;
+        }
+
+        // is this extension/version already published?
+        try {
+            let published = await isPublished(version, extension);
+            if (published && !forcePackaging) {
+                console.log(`  (skipping already published extension: ${extension} : v${version})`)
+                continue;
+            }
+        } catch (e) {
+            console.log('error: ' + e);
+            continue;
+        }
+
         const extDisplayName = capitalize.words(extension.replace('-', ' ')) + " (built-in)"
         const pckPath = extensions(extension, 'package.json');
         const nlsPath = extensions(extension, 'package.nls.json');
@@ -102,7 +123,12 @@ let version = vscodePck.version || '0.0.1';
             fs.writeFileSync(pckPath, JSON.stringify(pck, undefined, 2), 'utf-8');
             fs.writeFileSync(readmePath, readmeContent, 'utf-8');
             fs.copyFileSync(vscode('LICENSE.txt'), extLicense);
-            await run(vsce, ['package', '--yarn', '-o', dist()], extensions(extension));
+            // await run(vsce, ['package', '--yarn', '-o', dist()], extensions(extension));
+            await vsce.createVSIX({
+                'cwd': extensions(extension),
+                'packagePath': dist(),
+                'useYarn': true
+            });
             result.push('sucessfully packaged: ' + pck.name);
         } catch (e) {
             result.push('failed to packaged: ' + pck.name);

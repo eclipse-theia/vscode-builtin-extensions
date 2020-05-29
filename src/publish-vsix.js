@@ -15,11 +15,31 @@ const fs = require('fs')
 const os = require('os');
 const ovsx = require('ovsx');
 const { dist } = require('./paths.js');
+const { isPublished } = require('./version');
 
 (async () => {
     const result = [];
 
     for (const vsix of fs.readdirSync(dist())) {
+        // e.g.: bat-1.45.1.vsix
+        //       css-language-features-1.45.1.vsix
+        //       bat-1.45.2-next.5763d909d5.vsix
+        //       css-language-features-1.45.2-next.5763d909d5.vsix
+        let regexp = /^([\w-]+)-([\d\w\.-]+)\.vsix$/m;
+        const matches = vsix.match(new RegExp(regexp));
+        let [, extension, version] = matches;
+        
+        // is this extension/version alteady published?
+        try {
+            let found = await isPublished(version, extension);
+            if (found) {
+                console.log(`Extension ${extension} v${version} is already published - skipping!`)
+                continue;
+            } 
+        } catch (e) {
+            console.log('error: ' + e)
+        }
+
         console.log('publishing: ', dist(vsix), ' ...');
         try {
             await ovsx.publish({ extensionFile: dist(vsix), yarn: true });
