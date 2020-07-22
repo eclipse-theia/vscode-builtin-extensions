@@ -64,6 +64,12 @@ const repository = {
         }
     }
 
+    // html-language-features needs typescript from root node_modules. copying it to the server's
+    // node_modules lets it survive vsix packaging
+    if (fs.existsSync(extensions('node_modules')) && fs.existsSync(extensions('html-language-features'))) {
+        await fs.copy(extensions('node_modules'), extensions('html-language-features', 'server', 'node_modules'));
+    }
+
     if (!fs.existsSync(dist())) {
         await fs.mkdir(dist());
     }
