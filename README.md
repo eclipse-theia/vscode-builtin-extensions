@@ -1,6 +1,6 @@
 # vscode-builtin-extensions
 
-This extension contributes built-in VS Code extensions to Theia.
+This extension contributes built-in VS Code extensions to Eclipse Theia applications.
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/theia-ide/vscode-builtin-extensions)
 
@@ -12,8 +12,8 @@ Install [nvm](https://github.com/creationix/nvm#install-script).
 
 Install npm and node.
 
-    nvm install 10
-    nvm use 10
+    nvm install 12
+    nvm use 12
 
 Install yarn.
 
@@ -32,7 +32,7 @@ Install vscode prerequisite dependencies.
 Pick a specific vscode version (optional)
 
     cd <repo root>/vscode
-    git checkout 1.40.0
+    git checkout 1.45.0
 
 ## Build
 
@@ -118,3 +118,13 @@ The `ovsx` client is used to publish to an open-vsx registry. By default https:/
 After packaging the extensions as `.vsix` (see above), you may examine/test them under folder `dist`. Remove any that you do not wish to be published (e.g. those not working well). When ready proceed with publishing:
 
     yarn publish:vsix
+
+## License
+
+- [Eclipse Public License 2.0](LICENSE)
+- [一 (Secondary) GNU General Public License, version 2 with the GNU Classpath Exception](LICENSE)
+
+## Trademark
+
+"Theia" is a trademark of the Eclipse Foundation
+https://www.eclipse.org/theia
