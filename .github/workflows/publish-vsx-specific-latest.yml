@@ -29,7 +29,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 10
-        name: Update vscode Repo and Checkout Latest Official Release
+      - run: npx ovsx --version
+        name: Check ovsx version
       - run: yarn
         name: Bundle Extensions
       - run: yarn package-vsix:latest
