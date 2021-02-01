@@ -1,0 +1,38 @@
+name: ovsx-solid---publish-vscode-built-in-extensions-specific-version
+on:
+  push:
+    branches:
+      - ovsx-publish
+env:
+  NODE_OPTIONS: --max-old-space-size=8192
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT}}
+    steps:
+      - uses: actions/checkout@v1
+      - run: |
+          git submodule init
+          git submodule update
+        name: Checkout VS Code
+      # should be aligned with https://github.com/microsoft/vscode/blob/8031c495a65de120560d27703c415eb44c3a99a1/.github/workflows/ci.yml#L22-L32
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 dbus xvfb libgtk-3-0
+          sudo cp vscode/build/azure-pipelines/linux/xvfb.init /etc/init.d/xvfb
+          sudo chmod +x /etc/init.d/xvfb
+          sudo update-rc.d xvfb defaults
+          sudo service xvfb start
+        name: Setup Build Environment
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+        name: Update vscode Repo and Checkout Latest Official Release
+      - run: yarn
+        name: Bundle Extensions
+      - run: yarn package-vsix:latest
+        name: Package Solid Version of Extensions
+      - run: yarn publish:vsix
+        name: Publish Extensions to open-vsx.org
