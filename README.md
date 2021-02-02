@@ -121,7 +121,13 @@ After packaging the extensions as `.vsix` (see above), you may examine/test them
 
 ## Re-publishing vscode-builtin-extensions to open-vsx
 
-There is a GH action to help: `publish-vsx-specific-latest`. For this to work, the version to be published needs to be removed from open-vsx. Then one must push to branch `ovsx-publish`. We do not care about that branch - once publish is done, it can be reset the next time. Make sure the wanted solid version of the `vscode` git submodule is checked-out in the pushed change.
+### Solid version
+
+There is a GH action to help: `publish-vsx-specific-latest`. For this to work, the version to be published needs to be removed from open-vsx. Then one must push to branch `ovsx-publish`. Make sure the wanted solid version of the `vscode` git submodule is checked-out in the pushed change. We do not care about that branch - once publish is done, it can be reset the next time.
+
+### Intermediary (next) version
+
+There is a GH action to help: `publish-vsx-specific-next`. For this to work, the version to be published needs to be removed from open-vsx. Then one must push to branch `ovsx-publish-next`. Make sure the wanted intermediary version of the `vscode` git submodule is checked-out in the pushed change. We do not care about that branch - once publish is done, it can be reset the next time.
 
 ## License
 
