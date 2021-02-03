@@ -61,8 +61,10 @@ const { isPublished } = require('./version');
             await ovsx.publish({ extensionFile: dist(vsix), yarn: true });
         } catch (error) {
             console.log(`failed to publish ${vsix}: ${error}`);
-            console.log('Stopping here. Fix the problem and retry.\n');
-            process.exit(1);
+            result.push(`Failed to publish ${vsix}: ${error}`);
+            // console.log('Stopping here. Fix the problem and retry.\n');
+            console.log('Will continue with other extensions despite error.\n');
+            // process.exit(1);
         }
         result.push(`Successfully published ${vsix}`);        
     }
