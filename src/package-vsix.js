@@ -28,17 +28,19 @@ const { dist, extensions, vscode } = require('./paths.js');
 const { computeVersion, isPublished } = require('./version');
 const vsce = require('vsce');
 
-const { tag } = yargs.option('tag', {
+const { tag, force } = yargs.option('tag', {
     choices: ['latest', 'next']
-}).demandOption('tag').argv;
+}).demandOption('tag')
+.option('force', {
+    description: 'package extensions even if found to be already published',
+    boolean: true,
+    default: false
+}).argv;
 
 // extensions we do not want to package/publish, that
 // would otherwise be
 const to_skip = new Set();
 to_skip.add('vscode-account');
-
-/**  package extensions even if found to be already published */
-const forcePackaging = false;
 
 const repository = {
     "type": "git",
@@ -99,7 +101,7 @@ const repository = {
         // is this extension/version already published?
         try {
             let published = await isPublished(version, extension);
-            if (published && !forcePackaging) {
+            if (published && !force) {
                 console.log(`  (skipping already published extension: ${extension} : v${version})`)
                 continue;
             }
