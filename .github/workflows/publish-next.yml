@@ -34,7 +34,7 @@ jobs:
       - run: |
           cd vscode
           git fetch
-          git reset --hard origin/master
+          git reset --hard origin/main
         name: Reset to latest VS Code
       - run: yarn
         name: Bundle Extensions
