@@ -34,10 +34,10 @@ jobs:
       - run: |
           cd vscode
           git fetch --tags
-          git reset --hard origin/master
-        name: Reset to latest vsode Master
+          git reset --hard origin/main
+        name: Reset to latest vscode main
       - run: yarn
-        name: Bundle Extensions from vscode Master
+        name: Bundle Extensions from vscode main
       - run: yarn package-vsix:next
         name: Package Preview Version of Extensions
       - run: yarn publish:vsix

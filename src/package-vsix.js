@@ -57,8 +57,8 @@ const repository = {
     const result = [];
 
     // typescript-language-features ext needs "extensions/node_modules" content
-    // and a bit of massaging to work as standalone .vsix, so that the TS LS will 
-    // be packaged-along and available to the extension at runtime. 
+    // and a bit of massaging to work as standalone .vsix, so that the TS LS will
+    // be packaged-along and available to the extension at runtime.
     // Basically we replace this:
     //      "vscode.typescript-language-features",["..","node_modules"]
     // with this:
@@ -174,8 +174,8 @@ function genReadme(ext) {
     return `# Built-in extension: ${ext}
 
 ## Disclaimer
-    
-Microsoft does not endorse, build, test or publish this extension, nor are they involved with it in any other way. The only association is that they own the copyright of these extensions and the rest of vscode's [source code](https://github.com/microsoft/vscode/tree/master/extensions), which they released under the [MIT License](https://github.com/microsoft/vscode/blob/master/LICENSE.txt). A copy of the license is included in this extension. See LICENSE-vscode.txt
+
+Microsoft does not endorse, build, test or publish this extension, nor are they involved with it in any other way. The only association is that they own the copyright of these extensions and the rest of vscode's [source code](https://github.com/microsoft/vscode/tree/main/extensions), which they released under the [MIT License](https://github.com/microsoft/vscode/blob/main/LICENSE.txt). A copy of the license is included in this extension. See LICENSE-vscode.txt
 
     "Original VS Code sources are Copyright (c) 2015 - present Microsoft Corporation."
 
@@ -184,7 +184,7 @@ Microsoft does not endorse, build, test or publish this extension, nor are they 
 
 TL;DR: If you are running \`VS Code\`, \`Code OSS\` or derived product built from the VS Code repository, such as [VSCodium](https://github.com/VSCodium/vscodium), you do not need to install this extension since it's already present - "built-in".
 
-Built-in extensions are built-along and included in \`VS Code\` and \`Code OSS\`. In consequence they may be expected to be present and used by other extensions. They are part of the [vscode GitHub repository](https://github.com/microsoft/vscode/tree/master/) and generally contribute basic functionality such as textmate grammars, used for syntax-highlighting, for some of the most popular programming languages. In some cases, more substantial features are contributed through built-in extensions (e.g. Typescript, Markdown, git, ...). Please see the description above to learn what this specific extension does.
+Built-in extensions are built-along and included in \`VS Code\` and \`Code OSS\`. In consequence they may be expected to be present and used by other extensions. They are part of the [vscode GitHub repository](https://github.com/microsoft/vscode/tree/main/) and generally contribute basic functionality such as textmate grammars, used for syntax-highlighting, for some of the most popular programming languages. In some cases, more substantial features are contributed through built-in extensions (e.g. Typescript, Markdown, git, ...). Please see the description above to learn what this specific extension does.
 
 To learn more about built-in extensions, including how they are built and packaged, please see [vscode-builtin-extensions](https://github.com/theia-ide/vscode-builtin-extensions).
 
