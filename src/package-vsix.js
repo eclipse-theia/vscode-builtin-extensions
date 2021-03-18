@@ -20,7 +20,7 @@
  * and the wanted commit/tag checkled-out, before the start of packaging.
  */
 // @ts-check
-const fs = require('fs-extra')
+const fs = require('fs-extra');
 const os = require('os');
 const yargs = require('yargs');
 const capitalize = require('capitalize');
@@ -44,7 +44,7 @@ to_skip.add('vscode-account');
 
 const repository = {
     "type": "git",
-    "url": "https://github.com/theia-ide/vscode-builtin-extensions"
+    "url": "https://github.com/eclipse-theia/vscode-builtin-extensions"
 };
 
 (async () => {
@@ -197,7 +197,7 @@ TL;DR: If you are running \`VS Code\`, \`Code OSS\` or derived product built fro
 
 Built-in extensions are built-along and included in \`VS Code\` and \`Code OSS\`. In consequence they may be expected to be present and used by other extensions. They are part of the [vscode GitHub repository](https://github.com/microsoft/vscode/tree/main/) and generally contribute basic functionality such as textmate grammars, used for syntax-highlighting, for some of the most popular programming languages. In some cases, more substantial features are contributed through built-in extensions (e.g. Typescript, Markdown, git, ...). Please see the description above to learn what this specific extension does.
 
-To learn more about built-in extensions, including how they are built and packaged, please see [vscode-builtin-extensions](https://github.com/theia-ide/vscode-builtin-extensions).
+To learn more about built-in extensions, including how they are built and packaged, please see [vscode-builtin-extensions](https://github.com/eclipse-theia/vscode-builtin-extensions).
 
 `;
 
