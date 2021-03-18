@@ -32,8 +32,7 @@ const OPEN_VSX_ORG_URL = 'https://open-vsx.org'
  * @param releaseType latest or next
  */
 async function computeVersion(releaseType) {
-    const vscodePck = JSON.parse(fs.readFileSync(vscode('package.json'), 'utf-8'));
-    let ver = vscodePck.version || '0.0.1';
+    let ver = await resolveVscodeVersion();
     const shortRevision = (await run('git', ['rev-parse', '--short', 'HEAD'], vscode())).trim();
 
     return new Promise((resolve) => {
@@ -44,6 +43,11 @@ async function computeVersion(releaseType) {
         }
         resolve(ver);
     });
+}
+
+async function resolveVscodeVersion() {
+    const vscodePck = JSON.parse(fs.readFileSync(vscode('package.json'), 'utf-8'));
+    return Promise.resolve(vscodePck.version || '0.0.1');
 }
 
 /** 
@@ -63,4 +67,4 @@ async function isPublished(version, extension, namespace = 'vscode') {
     return true;
 }
 
-module.exports = { computeVersion, isPublished };
+module.exports = { computeVersion, isPublished, resolveVscodeVersion };
