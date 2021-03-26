@@ -134,6 +134,17 @@ const repository = {
         pck.repository = repository;
         pck.version = version;
         pck.license = 'SEE LICENSE IN LICENSE-vscode.txt';
+
+        // Prevent 'vsce' packaging errors by removing the specified icon if it does not exist.
+        // When an icon is not provided a default icon will be applied by the registry.
+        const icon = pck.icon;
+        if (icon) {
+            const iconPath = extensions(extension, icon);
+            if (!fs.existsSync(iconPath)) {
+                delete pck.icon;
+            }
+        }
+
         if (tag === 'next') {
             pck.preview = true;
         }
