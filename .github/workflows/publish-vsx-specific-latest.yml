@@ -35,5 +35,7 @@ jobs:
         name: Bundle Extensions
       - run: yarn package-vsix:latest
         name: Package Solid Version of Extensions
+      - run: create-extension-pack:latest
+        name: Create built-in extensions pack
       - run: yarn publish:vsix
         name: Publish Extensions to open-vsx.org

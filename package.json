@@ -11,6 +11,8 @@
         "publish:next": "node ./src/publish.js --tag=next",
         "package-vsix:latest": "node src/package-vsix.js --tag latest",
         "package-vsix:next": "node src/package-vsix.js --tag next",
+        "create-extension-pack:latest": "node src/create-extension-pack.js --tag latest",
+        "create-extension-pack:next": "node src/create-extension-pack.js --tag next",
         "rebuild:browser": "theia rebuild:browser",
         "rebuild:electron": "theia rebuild:electron",
         "start:browser": "yarn rebuild:browser && (cd browser-app && yarn start)",
