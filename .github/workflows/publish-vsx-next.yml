@@ -40,5 +40,7 @@ jobs:
         name: Bundle Extensions from vscode main
       - run: yarn package-vsix:next
         name: Package Preview Version of Extensions
+      - run: create-extension-pack:next
+        name: Create built-in extensions pack
       - run: yarn publish:vsix
         name: Publish Extensions to open-vsx.org

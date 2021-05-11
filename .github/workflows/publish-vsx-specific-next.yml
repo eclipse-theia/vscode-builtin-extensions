@@ -34,6 +34,8 @@ jobs:
       - run: yarn
         name: Bundle Extensions
       - run: yarn package-vsix:next
-        name: Package Internediate Version of Extensions
+        name: Package Intermediate Version of Extensions
+      - run: create-extension-pack:next
+        name: Create built-in extensions pack
       - run: yarn publish:vsix
         name: Publish Extensions to open-vsx.org
