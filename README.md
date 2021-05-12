@@ -1,4 +1,4 @@
-# vscode-builtin-extensions
+# Built-in vscode extensions
 
 This extension contributes built-in VS Code extensions to Eclipse Theia applications.
 
@@ -80,7 +80,7 @@ Start watching of the electron example.
 
 Launch `Start Electron Backend` configuration from VS code.
 
-## Publishing vscode-builtin-extensions to npm
+## Publishing built-in vscode extensions to npm
 
 If required, step the extension's version in `src/publish.js`
 
@@ -95,9 +95,9 @@ Publish packages with lerna to update versions properly across local packages, [
 
     npx lerna publish
 
-## Packaging vscode-builtin-extensions as individual `.vsix`
+## Packaging a built-in vscode extension.
 
-The version of the packaged built-ins is taken from VS Code's `package.json` and adjusted automatically when packaging a `next` revision.
+The version of the packaged built-in corresponds to the `version` present in the vscode sub-module's `package.json`. For `next` versions, an appropriate hash suffix is added.
 
 Latest / solid revision example:
 
@@ -111,23 +111,43 @@ Next / interim revision example:
 
 The generated `.vsix` will be under folder `./dist`
 
-## Publishing vscode-builtin-extensions to open-vsx
+## Packaging built-in vscode extensions in an extension-pack.
 
-The `ovsx` client is used to publish to an open-vsx registry. By default https://open-vsx.org is used. To use another open-vsx registry, set its URL in environment variable `OVSX_REGISTRY_URL`. Use enviromnent variable `OVSX_PAT` to store the personal access token obtained from the registry.
+The version of the built-in extension-pack corresponds to the `version` present in the vscode sub-module's `package.json`. For `next` versions, an appropriate hash suffix is added.
 
-After packaging the extensions as `.vsix` (see above), you may examine/test them under folder `dist`. Remove any that you do not wish to be published (e.g. those not working well). When ready proceed with publishing:
+Latest / solid revision example:
+
+    cd vscode; git checkout 1.45.0; cd ..
+    yarn; yarn create-extension-pack:latest
+
+Next / interim revision example:
+
+    cd vscode; git checkout d69a79b73808559a91206d73d7717ff5f798f23c; cd ..
+    yarn; yarn create-extension-pack:next
+
+The generated `.vsix` will be under the folder `./dist`
+
+## Publishing individual built-in vscode extensions and builtin-extension-packs to open-vsx
+
+The `ovsx` client is used to publish to an open-vsx registry. The default registry is set to the public instance at https://open-vsx.org.
+
+The environment variable `OVSX_REGISTRY_URL` may be set to configure publishing to a different registry URL.
+
+The environment variable `OVSX_PAT` is used to set the personal access token obtained from the registry.
+
+After packaging the extensions and extension-packs as `.vsix` (see above), you may examine/test them under the `dist` folder. Remove any extension that you do not wish to be published (e.g. those not working well), and when ready proceed with publishing:
 
     yarn publish:vsix
 
-## Re-publishing vscode-builtin-extensions to open-vsx
+## Re-publishing individual built-in vscode extensions and built-in extension packs to open-vsx.
 
 ### Solid version
 
-There is a GH action to help: `publish-vsx-specific-latest`. For this to work, the version to be published needs to be removed from open-vsx. Then one must push to branch `ovsx-publish`. Make sure the wanted solid version of the `vscode` git submodule is checked-out in the pushed change. We do not care about that branch - once publish is done, it can be reset the next time.
+There is a GH action to help: `publish-vsx-specific-latest`. For this to work, the version to be published needs to be removed from open-vsx. Then one must push to branch `ovsx-publish`. Make sure the wanted solid version of the `vscode` git submodule is checked-out in the pushed change. We do not care about that branch - once the publishing is done, it can be force reset the next time.
 
 ### Intermediary (next) version
 
-There is a GH action to help: `publish-vsx-specific-next`. For this to work, the version to be published needs to be removed from open-vsx. Then one must push to branch `ovsx-publish-next`. Make sure the wanted intermediary version of the `vscode` git submodule is checked-out in the pushed change. We do not care about that branch - once publish is done, it can be reset the next time.
+There is a GH action to help: `publish-vsx-specific-next`. For this to work, the version to be published needs to be removed from open-vsx. Then one must push to branch `ovsx-publish-next`. Make sure the wanted intermediary version of the `vscode` git submodule is checked-out in the pushed change. We do not care about that branch - once the publishing is done, it can be force reset the next time.
 
 ## License
 
