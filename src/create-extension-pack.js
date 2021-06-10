@@ -45,6 +45,15 @@ const packName = 'builtin-extension-pack';
 const publisher = 'eclipse-theia';
 const repository = 'https://github.com/eclipse-theia/vscode-builtin-extensions';
 
+/**
+ * The following are external builtin extensions suitable to be included in the 'builtin-extension-pack'
+ * The source code of these external extensions is not included in the vscode repository but are however
+ * fetched by vscode at build time.
+ * https://github.com/microsoft/vscode/blob/1.57.0/product.json#L34-L126
+ */
+const externalBuiltins = ['ms-vscode.node-debug', 'ms-vscode.node-debug2', 'ms-vscode.references-view',
+    'ms-vscode.js-debug-companion', 'ms-vscode.js-debug'];
+
 (async () => {
     const vscodeVersion = await resolveVscodeVersion();
     const packVersion = await computeVersion(tag);
@@ -72,7 +81,7 @@ const repository = 'https://github.com/eclipse-theia/vscode-builtin-extensions';
     extPack.categories = categories;
     extPack.engines = { vscode: '^' + vscodeVersion };
     extPack.repository = repository;
-    extPack.extensionPack = await resolveExtensions();
+    extPack.extensionPack = await resolveExtensions([]);
 
     if (extPack.extensionPack.length === 0) {
         process.exitCode = 1;
@@ -96,8 +105,14 @@ const repository = 'https://github.com/eclipse-theia/vscode-builtin-extensions';
         'useYarn': true
     });
 
-    async function resolveExtensions() {
-        const extensionsArr = [];
+    async function resolveExtensions(extensionsArr) {
+        await resolveVscodeExtensions(extensionsArr);
+        await resolveExternalBuiltins(extensionsArr);
+
+        return Promise.resolve(extensionsArr);
+    }
+
+    async function resolveVscodeExtensions(extensionsArr) {
         for (const extension of fs.readdirSync(extensions())) {
             const extDataPath = extensions(extension, packageJson);
             if (!fs.existsSync(extDataPath)) {
@@ -119,11 +134,25 @@ const repository = 'https://github.com/eclipse-theia/vscode-builtin-extensions';
             console.log('Adding: ' + extensionId);
             extensionsArr.push(extensionId);
         }
-        return Promise.resolve(extensionsArr);
+    }
+
+    async function resolveExternalBuiltins(extensionsArr) {
+        for (const id of externalBuiltins) {
+            const idFields = id.split('.', 2); // namespace.name
+            // Validation of version is not required as they are not published every release
+            const version = '';
+            if (!(await isAvailable(undefined, idFields[1], version, idFields[0]))) {
+                console.log("Skipping extension, as it's not found in the registry : " + id);
+                continue;
+            }
+
+            console.log('Adding: ' + id);
+            extensionsArr.push(id);
+        }
     }
 
     async function isAvailable(extVsixPath, extensionName, extensionVersion, namespace = 'vscode') {
-        if (fs.existsSync(extVsixPath)) {
+        if (extVsixPath && fs.existsSync(extVsixPath)) {
             return Promise.resolve(true);
         }
 
