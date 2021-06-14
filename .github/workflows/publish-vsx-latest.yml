@@ -30,7 +30,7 @@ jobs:
         name: Setup Build Environment
       - uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12
       - run: |
           cd vscode
           git fetch --tags
