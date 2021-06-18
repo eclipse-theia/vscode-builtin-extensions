@@ -17,7 +17,7 @@
 /*
  * Creates an extension package referencing all built-in extensions previously
  * created during build time i.e. by executing yarn
- * 
+ *
  * Extensions will be skipped if a corresponding .vsix file is not found under the 'dist'
  * folder and also not found under the extension registry.
  */
@@ -41,7 +41,7 @@ const { tag, force } = yargs.option('tag', {
 
 const packageJson = 'package.json'
 const categories = ['Extension Packs'];
-const packName = 'builtin-extension-pack';
+export const packName = 'builtin-extension-pack';
 const publisher = 'eclipse-theia';
 const repository = 'https://github.com/eclipse-theia/vscode-builtin-extensions';
 
@@ -161,7 +161,7 @@ the included extensions are already present - "built-in".
 
 Built-in extensions are built-along and included in \`VS Code\` and \`Code OSS\`.
 In consequence they may be expected to be present and used by other extensions.
-They are part of the [vscode GitHub repository](https://github.com/microsoft/vscode/tree/master/) and 
+They are part of the [vscode GitHub repository](https://github.com/microsoft/vscode/tree/master/) and
 generally contribute basic functionality such as textmate grammars, used for syntax-highlighting, for some
 of the most popular programming languages. In some cases, more substantial features are contributed through
 built-in extensions (e.g. Typescript, Markdown, git, ...). Please see the description above to learn what
