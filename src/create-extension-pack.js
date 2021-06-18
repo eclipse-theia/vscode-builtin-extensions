@@ -41,7 +41,7 @@ const { tag, force } = yargs.option('tag', {
 
 const packageJson = 'package.json'
 const categories = ['Extension Packs'];
-export const packName = 'builtin-extension-pack';
+const packName = 'builtin-extension-pack';
 const publisher = 'eclipse-theia';
 const repository = 'https://github.com/eclipse-theia/vscode-builtin-extensions';
 
@@ -175,3 +175,5 @@ included as a dependency or be installed within an extension or plugin directory
 individual extension as a dependency.
 `;
 }
+
+module.exports = { packName };
