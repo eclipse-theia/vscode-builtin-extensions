@@ -29,7 +29,7 @@
         "lerna": "2.4.0",
         "fs-extra": "8.1.0",
         "capitalize": "^2.0.2",
-        "ovsx": "latest",
+        "ovsx": "^0.1.0",
         "node-fetch": "^2.5.7"
     },
     "workspaces": [
