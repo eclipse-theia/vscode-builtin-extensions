@@ -36,23 +36,23 @@ const packName = 'builtin-extension-pack';
 
 (async () => {
     const result = [];
+    const extensions = fs.readdirSync(dist());
 
     // Publish individual builtin extensions.
-    for (const vsix of fs.readdirSync(dist())) {
-        if (vsix.startsWith(packName)) {
-            continue;
+    await Promise.all(extensions.map(async vsix => {
+        if (!vsix.startsWith(packName)) {
+            const publishedVsix = await publishExtension(vsix);
+            result.push(`Successfully published extension: ${publishedVsix}`);
         }
-        const publishedVsix = publishExtension(vsix);
-        result.push(`Successfully published: ${publishedVsix}`);
-    }
+    }));
 
-    // Publish builtin extension-pack.
-    for (const vsix of fs.readdirSync(dist())) {
+    // Publish builtin extension-packs.
+    await Promise.all(extensions.map(async vsix => {
         if (vsix.startsWith(packName)) {
-            const publishedVsix = publishExtension(vsix);
+            const publishedVsix = await publishExtension(vsix);
             result.push(`Successfully published extension-pack: ${publishedVsix}`);
         }
-    }
+    }));
 
     console.log(result.join(os.EOL));
 })();
