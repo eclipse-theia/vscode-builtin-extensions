@@ -82,8 +82,8 @@ async function publishExtension(vsix) {
         }
         return vsix;
     } catch (e) {
-        console.log('Error: ' + e);
-        console.log('Stopping here. Fix the problem and retry.\n');
-        process.exit(1);
+        console.error(`Failed to publish: ${vsix}. Stopping here. Fix the problem and retry.\n`);
+        process.exitCode = 1;
+        throw e;
     }
 }
