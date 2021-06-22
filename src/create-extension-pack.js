@@ -175,5 +175,3 @@ included as a dependency or be installed within an extension or plugin directory
 individual extension as a dependency.
 `;
 }
-
-module.exports = { packName };
