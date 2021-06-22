@@ -30,9 +30,9 @@
 const fs = require('fs')
 const os = require('os');
 const ovsx = require('ovsx');
-const { packName } = require('./create-extension-pack.js');
 const { dist } = require('./paths.js');
 const { isPublished } = require('./version');
+const packName = 'builtin-extension-pack';
 
 (async () => {
     const result = [];
