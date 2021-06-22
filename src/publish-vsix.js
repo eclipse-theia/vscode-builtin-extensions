@@ -38,7 +38,7 @@ const { isPublished } = require('./version');
     const result = [];
 
     // Publish individual builtin extensions.
-    for (const vsix of fs.readdirSync(dist([]))) {
+    for (const vsix of fs.readdirSync(dist())) {
         if (vsix.startsWith(packName)) {
             continue;
         }
@@ -47,7 +47,7 @@ const { isPublished } = require('./version');
     }
 
     // Publish builtin extension-pack.
-    for (const vsix of fs.readdirSync(dist([]))) {
+    for (const vsix of fs.readdirSync(dist())) {
         if (vsix.startsWith(packName)) {
             const publishedVsix = publishExtension(vsix);
             result.push(`Successfully published extension-pack: ${publishedVsix}`);
@@ -81,9 +81,9 @@ async function publishExtension(vsix) {
         console.log('Error: ' + e)
     }
 
-    console.log('Publishing: ', dist([vsix]), ' ...');
+    console.log('Publishing: ', dist(vsix), ' ...');
     try {
-        await ovsx.publish({ extensionFile: dist([vsix]), yarn: true });
+        await ovsx.publish({ extensionFile: dist(vsix), yarn: true });
     } catch (error) {
         console.log(`Failed to publish ${vsix}: ${error}`);
         console.log('Stopping here. Fix the problem and retry.\n');

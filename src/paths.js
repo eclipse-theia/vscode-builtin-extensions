@@ -19,37 +19,37 @@ const path = require('path');
 const cp = require('child_process');
 
 /**
- * @type {(paths: string[]) => string}
+ * @type {(...paths: string[]) => string}
  */
 function root(...paths) {
     return path.join(__dirname, '..', ...paths);
 }
 /**
- * @type {(paths: string[]) => string}
+ * @type {(...paths: string[]) => string}
  */
 function dist(...paths) {
     return root('dist', ...paths);
 }
 /**
- * @type {(paths: string[]) => string}
+ * @type {(...paths: string[]) => string}
  */
 function src(...paths) {
     return root('src', ...paths);
 }
 /**
- * @type {(paths: string[]) => string}
+ * @type {(...paths: string[]) => string}
  */
 function vscode(...paths) {
     return root('vscode', ...paths);
 }
 /**
- * @type {(paths: string[]) => string}
+ * @type {(...paths: string[]) => string}
  */
 function theiaExtension(...paths) {
     return root('vscode-builtin-extensions', ...paths);
 }
 /**
- * @type {(paths: string[]) => string}
+ * @type {(...paths: string[]) => string}
  */
 function extensions(...paths) {
     return theiaExtension('extensions', ...paths);
