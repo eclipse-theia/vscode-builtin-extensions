@@ -8,12 +8,14 @@ This extension contributes built-in VS Code extensions to Eclipse Theia applicat
 
 Install [nvm](https://github.com/creationix/nvm#install-script).
 
-    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.5/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 
 Install npm and node.
 
-    nvm install 12
-    nvm use 12
+    nvm install 14
+    nvm use 14
+
+NOTE: To re-build older `vscode` extensions requiring node 12, use the branch `node-12` on this repository and follow the corresponding `README.md` on that branch.
 
 Install yarn.
 
@@ -32,7 +34,7 @@ Install vscode prerequisite dependencies.
 Pick a specific vscode version (optional)
 
     cd <repo root>/vscode
-    git checkout 1.45.0
+    git checkout 1.58.1
 
 ## Build
 
@@ -101,12 +103,12 @@ The version of the packaged built-in corresponds to the `version` present in the
 
 Latest / solid revision example:
 
-    cd vscode; git checkout 1.45.0; cd ..
+    cd vscode; git checkout 1.58.1; cd ..
     yarn; yarn package-vsix:latest
 
 Next / interim revision example:
 
-    cd vscode; git checkout d69a79b73808559a91206d73d7717ff5f798f23c; cd ..
+    cd vscode; git checkout fe671f300845ca5161885125b1e12d43fc25ccf8; cd ..
     yarn; yarn package-vsix:next
 
 The generated `.vsix` will be under folder `./dist`
@@ -117,12 +119,12 @@ The version of the built-in extension-pack corresponds to the `version` present 
 
 Latest / solid revision example:
 
-    cd vscode; git checkout 1.45.0; cd ..
+    cd vscode; git checkout 1.58.1; cd ..
     yarn; yarn create-extension-pack:latest
 
 Next / interim revision example:
 
-    cd vscode; git checkout d69a79b73808559a91206d73d7717ff5f798f23c; cd ..
+    cd vscode; git checkout fe671f300845ca5161885125b1e12d43fc25ccf8; cd ..
     yarn; yarn create-extension-pack:next
 
 The generated `.vsix` will be under the folder `./dist`
