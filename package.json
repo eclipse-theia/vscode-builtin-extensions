@@ -8,7 +8,6 @@
         "compile:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/compile.js",
         "bundle:extensions": "NODE_OPTIONS=--max-old-space-size=8192 node ./src/bundle.js",
         "publish:vsix": "node ./src/publish-vsix.js",
-        "publish:next": "node ./src/publish.js --tag=next",
         "package-vsix:latest": "node src/package-vsix.js --tag latest",
         "package-vsix:next": "node src/package-vsix.js --tag next",
         "create-extension-pack:latest": "node src/create-extension-pack.js --tag latest",
