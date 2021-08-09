@@ -17,7 +17,7 @@
 /*
  * Package individual built-in VS Code extensions in .vsix packages.
  * It's assumed that the vscode git submodule has already been updated
- * and the wanted commit/tag checkled-out, before the start of packaging.
+ * and the wanted commit/tag checked-out, before the start of packaging.
  */
 // @ts-check
 const fs = require('fs-extra');
@@ -74,7 +74,7 @@ const repository = {
         const patched = '"vscode.typescript-language-features",[".","deps"]';
         const extjsOrigContent = fs.readFileSync(extjs, 'utf-8');
         if (extjsOrigContent.includes(orig)) {
-            console.log('TS language compliled extension is original - patching')
+            console.log('TS language compiled extension is original - patching')
             fs.writeFileSync(extjs, extjsOrigContent.replace(orig, patched), 'utf-8');
         }
         else {
@@ -164,7 +164,7 @@ const repository = {
                 'packagePath': dist(),
                 'useYarn': true
             });
-            result.push('sucessfully packaged: ' + pck.name);
+            result.push('successfully packaged: ' + pck.name);
         } catch (e) {
             result.push('failed to packaged: ' + pck.name);
             if (e) {

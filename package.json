@@ -28,7 +28,8 @@
         "fs-extra": "8.1.0",
         "lerna": "2.4.0",
         "node-fetch": "^2.5.7",
-        "ovsx": "^0.1.0"
+        "ovsx": "^0.1.0",
+        "p-queue": "^2.4.2"
     },
     "workspaces": [
         "vscode-builtin-extensions",

@@ -32,29 +32,34 @@ const os = require('os');
 const ovsx = require('ovsx');
 const { dist } = require('./paths.js');
 const { isPublished } = require('./version');
+const PQueue = require('p-queue')
+
 const packName = 'builtin-extension-pack';
 
 (async () => {
-    const result = [];
     const extensions = fs.readdirSync(dist());
 
-    // Publish individual builtin extensions.
-    await Promise.all(extensions.map(async vsix => {
-        if (!vsix.startsWith(packName)) {
-            const publishedVsix = await publishExtension(vsix);
-            result.push(`Successfully published extension: ${publishedVsix}`);
-        }
-    }));
+    /** The queue for individual builtin extensions. */
+    const builtinQueue = new PQueue({ concurrency: 4 });
+    /** The queue for extension packs. */
+    const packQueue = new PQueue({ concurrency: 1 });
 
-    // Publish builtin extension-packs.
-    await Promise.all(extensions.map(async vsix => {
+    for (const vsix of extensions) {
         if (vsix.startsWith(packName)) {
-            const publishedVsix = await publishExtension(vsix);
-            result.push(`Successfully published extension-pack: ${publishedVsix}`);
+            packQueue.add(() => publishExtension(vsix));
+        } else {
+            builtinQueue.add(() => publishExtension(vsix))
         }
-    }));
+    }
 
-    console.log(result.join(os.EOL));
+    // Start the individual extension queue, and wait till it resolves.
+    builtinQueue.start();
+    await builtinQueue.onIdle();
+
+    // Start the extension pack queue after the individual extensions have been published.
+    packQueue.start();
+    await packQueue.onIdle();
+
 })();
 
 /**
@@ -80,9 +85,10 @@ async function publishExtension(vsix) {
             console.log('Publishing: ', dist(vsix), ' ...');
             await ovsx.publish({ extensionFile: dist(vsix), yarn: true });
         }
+        console.log(`Successfully published extension: ${vsix}\n`);
         return vsix;
     } catch (e) {
-        console.error(`Failed to publish: ${vsix}. Stopping here. Fix the problem and retry.\n`);
+        console.error(`Skipping publishing of: ${vsix}.\n`);
         process.exitCode = 1;
         throw e;
     }
