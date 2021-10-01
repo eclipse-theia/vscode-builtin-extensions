@@ -12,10 +12,6 @@
         "package-vsix:next": "node src/package-vsix.js --tag next",
         "create-extension-pack:latest": "node src/create-extension-pack.js --tag latest",
         "create-extension-pack:next": "node src/create-extension-pack.js --tag next",
-        "rebuild:browser": "theia rebuild:browser",
-        "rebuild:electron": "theia rebuild:electron",
-        "start:browser": "yarn rebuild:browser && (cd browser-app && yarn start)",
-        "start:electron": "yarn rebuild:electron && (cd electron-app && yarn start)",
         "checkout-latest-vscode-release": "node src/checkout-latest-vscode.js",
         "clean": "git clean -ffdx"
     },
@@ -32,11 +28,6 @@
         "p-queue": "^2.4.2"
     },
     "workspaces": [
-        "vscode-builtin-extensions",
-        "browser-app",
-        "electron-app"
-    ],
-    "resolutions": {
-        "@types/react": "17.0.14"
-    }
+        "vscode-builtin-extensions"
+    ]
 }
