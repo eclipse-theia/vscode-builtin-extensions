@@ -14,12 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-/*
- * Package individual built-in VS Code extensions in .vsix packages.
+// @ts-check
+
+/**
+ * @file Package individual built-in VS Code extensions in .vsix packages.
  * It's assumed that the vscode git submodule has already been updated
  * and the wanted commit/tag checked-out, before the start of packaging.
  */
-// @ts-check
+
+/** */
 const fs = require('fs-extra');
 const os = require('os');
 const yargs = require('yargs');
@@ -43,8 +46,8 @@ const to_skip = new Set();
 to_skip.add('vscode-account');
 
 const repository = {
-    "type": "git",
-    "url": "https://github.com/eclipse-theia/vscode-builtin-extensions"
+    type: 'git',
+    url: 'https://github.com/eclipse-theia/vscode-builtin-extensions'
 };
 
 (async () => {
@@ -68,16 +71,14 @@ const repository = {
     if (fs.existsSync(extensions('node_modules')) && fs.existsSync(extensions('typescript-language-features'))) {
         await fs.copy(extensions('node_modules'), extensions('typescript-language-features', 'deps'));
         console.log('Copying node_modules under typescript-language-features');
-
-        const extjs = extensions('typescript-language-features', 'dist', 'extension.js');
-        const orig = '"vscode.typescript-language-features",["..","node_modules"]';
+        const extensionJs = extensions('typescript-language-features', 'dist', 'extension.js');
+        const original = '"vscode.typescript-language-features",["..","node_modules"]';
         const patched = '"vscode.typescript-language-features",[".","deps"]';
-        const extjsOrigContent = fs.readFileSync(extjs, 'utf-8');
-        if (extjsOrigContent.includes(orig)) {
-            console.log('TS language compiled extension is original - patching')
-            fs.writeFileSync(extjs, extjsOrigContent.replace(orig, patched), 'utf-8');
-        }
-        else {
+        const extensionJsContent = fs.readFileSync(extensionJs, 'utf-8');
+        if (extensionJsContent.includes(original)) {
+            console.log('TS language compiled extension is original - patching');
+            fs.writeFileSync(extensionJs, extensionJsContent.replace(original, patched), 'utf-8');
+        } else {
             console.log('TS language extension is already patched')
         }
     }
