@@ -16,7 +16,6 @@
 
 // @ts-check
 const path = require('path');
-const cp = require('child_process');
 
 /**
  * @type {(...paths: string[]) => string}
@@ -56,19 +55,19 @@ function extensions(...paths) {
 }
 
 /**
- * @type {(command: string, args?: ReadonlyArray<string>, cwd?: string) => Promise<string>}
+ * Execute `command` and returns its stdout.
+ *
+ * Trims the last line return so you don't need to do `(await run()).trim()`.
+ *
+ * @type {(command: string, args?: readonly string[], cwd?: string) => Promise<string>}
  */
-function run(command, args, cwd = process.cwd()) {
-    return new Promise((resolve, reject) => {
-        let result = '';
-        const p = cp.spawn(command, args, { cwd });
-        p.stdout.on('data', data => {
-            console.log(String(data));
-            result += String(data);
-        });
-        p.stderr.on('data', data => console.error(String(data)));
-        p.on('close', code => !code ? resolve(result) : reject());
-    });
+async function run(command, args, cwd = process.cwd()) {
+    // `execa` is an ES module so we can't `require`-it
+    const { execa } = await import('execa');
+    const child = execa(command, args, { cwd, stdio: ['inherit', 'pipe', 'inherit'] });
+    child.stdout.pipe(process.stdout);
+    // `execa` already trims stdout by default
+    return (await child).stdout;
 }
 
 module.exports = { root, dist, src, vscode, theiaExtension, extensions, run };

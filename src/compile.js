@@ -15,7 +15,7 @@
  ********************************************************************************/
 
 // @ts-check
-const { src, vscode, run } = require('./paths.js')
+const { src, vscode, run } = require('./paths.js');
 if (process.cwd() !== vscode()) {
     run('node', [src('compile.js')], vscode());
 } else {

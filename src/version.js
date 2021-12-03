@@ -14,6 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
+// @ts-check
+
 /**
  * version-related utility functions
  */
@@ -23,48 +25,40 @@ const { run, vscode } = require('./paths.js');
 
 const OPEN_VSX_ORG_URL = 'https://open-vsx.org'
 
-// @ts-check
-/** 
+/**
  * Returns the version to use when packaging built-in extensions. Based
  * on VS Code submodule version and whether it's to be a solid or preview
  * release
- * 
- * @param releaseType latest or next
+ *
+ * @param {'latest' | 'next'} releaseType
+ * @returns {Promise<string>}
  */
 async function computeVersion(releaseType) {
-    let ver = await resolveVscodeVersion();
-    const shortRevision = (await run('git', ['rev-parse', '--short', 'HEAD'], vscode())).trim();
-
-    return new Promise((resolve) => {
-        // use VS Code version and SHA when packaging 'next'
-        if (releaseType === 'next') {            
-            let [major, minor, bugfix] = ver.split('.');
-            ver = `${major}.${minor}.${bugfix}-next.${shortRevision}`;
-        }
-        resolve(ver);
-    });
+    let version = await resolveVscodeVersion();
+    // Use VS Code version and SHA when packaging 'next':
+    if (releaseType === 'next') {
+        const [major, minor, bugfix] = version.split('.');
+        const shortRevision = await run('git', ['rev-parse', '--short', 'HEAD'], vscode());
+        version = `${major}.${minor}.${bugfix}-next.${shortRevision}`;
+    }
+    return version;
 }
 
 async function resolveVscodeVersion() {
-    const vscodePck = JSON.parse(fs.readFileSync(vscode('package.json'), 'utf-8'));
-    return Promise.resolve(vscodePck.version || '0.0.1');
+    const { version = '0.0.1' } = JSON.parse(await fs.promises.readFile(vscode('package.json'), 'utf-8'));
+    return version;
 }
 
-/** 
+/**
  * Returns whether an extension is already published on the currently
- * set registry (default: https://open-vsx.org) 
+ * set registry (default: https://open-vsx.org)
  */
 async function isPublished(version, extension, namespace = 'vscode') {
     let registry = process.env.OVSX_REGISTRY_URL ? process.env.OVSX_REGISTRY_URL : OPEN_VSX_ORG_URL;
     const response = await fetch(`${registry}/api/${namespace}/${extension}/${version}`);
     const json = await response.json();
-
     // namespace/ext/version not found
-    if (json.error) {
-        return false;
-    }
-
-    return true;
+    return !json.error;
 }
 
 module.exports = { computeVersion, isPublished, resolveVscodeVersion };
