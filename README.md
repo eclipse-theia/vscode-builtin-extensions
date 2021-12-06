@@ -40,48 +40,6 @@ Pick a specific vscode version (optional)
 
     yarn
 
-## Running the browser example
-
-    yarn start:browser
-
-Open http://localhost:3000 in the browser.
-
-## Running the Electron example
-
-    yarn start:electron
-
-## Developing with the browser example
-
-Start watching of vscode-builtin-extensions.
-
-    cd vscode-builtin-extensions
-    yarn watch
-
-Start watching of the browser example.
-
-    yarn rebuild:browser
-    cd browser-app
-    yarn watch
-
-Launch `Start Browser Backend` configuration from VS code.
-
-Open http://localhost:3000 in the browser.
-
-## Developing with the Electron example
-
-Start watching of vscode-builtin-extensions.
-
-    cd vscode-builtin-extensions
-    yarn watch
-
-Start watching of the electron example.
-
-    yarn rebuild:electron
-    cd electron-app
-    yarn watch
-
-Launch `Start Electron Backend` configuration from VS code.
-
 ## Publishing built-in vscode extensions to npm
 
 If required, step the extension's version in `src/publish.js`
