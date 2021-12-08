@@ -40,21 +40,6 @@ Pick a specific vscode version (optional)
 
     yarn
 
-## Publishing built-in vscode extensions to npm
-
-If required, step the extension's version in `src/publish.js`
-
-    // bump to publish
-    let version = '0.2.1';
-
-Create a npm user and login to the npm registry, [more on npm publishing](https://docs.npmjs.com/getting-started/publishing-npm-packages).
-
-    npm login
-
-Publish packages with lerna to update versions properly across local packages, [more on publishing with lerna](https://github.com/lerna/lerna#publish).
-
-    npx lerna publish
-
 ## Packaging a built-in vscode extension.
 
 The version of the packaged built-in corresponds to the `version` present in the vscode sub-module's `package.json`. For `next` versions, an appropriate hash suffix is added.
