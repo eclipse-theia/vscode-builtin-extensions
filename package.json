@@ -2,8 +2,7 @@
     "private": true,
     "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
     "scripts": {
-        "prepare": "yarn build:extensions && yarn bundle:extensions && yarn build",
-        "build": "lerna run prepare",
+        "prepare": "yarn build:extensions && yarn bundle:extensions",
         "build:extensions": "yarn --cwd vscode && yarn compile:extensions",
         "compile:extensions": "cross-env NODE_OPTIONS=--max-old-space-size=8192 node ./src/compile.js",
         "bundle:extensions": "cross-env NODE_OPTIONS=--max-old-space-size=8192 node ./src/bundle.js",
@@ -23,10 +22,11 @@
         "capitalize": "^2.0.2",
         "cross-env": "^7.0.3",
         "execa": "^6.0.0",
-        "lerna": "^4.0.0",
+        "fs-extra": "^10.0.0",
         "node-fetch": "^2.5.7",
         "ovsx": "^0.2.1",
-        "p-queue": "^2.4.2"
+        "p-queue": "^2.4.2",
+        "yargs": "^17.0.0"
     },
     "workspaces": [
         "vscode-builtin-extensions"
