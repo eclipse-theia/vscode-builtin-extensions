@@ -23,9 +23,9 @@
         "capitalize": "^2.0.2",
         "cross-env": "^7.0.3",
         "execa": "^6.0.0",
-        "lerna": "2.4.0",
+        "lerna": "^4.0.0",
         "node-fetch": "^2.5.7",
-        "ovsx": "^0.1.0",
+        "ovsx": "^0.2.1",
         "p-queue": "^2.4.2"
     },
     "workspaces": [
