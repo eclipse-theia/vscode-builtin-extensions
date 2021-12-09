@@ -1,7 +1,7 @@
 name: ovsx-preview--publish-vscode-built-in-extensions
 on:
-  # schedule:
-  #   - cron: "30 0 * * *"
+  schedule:
+    - cron: "30 0 * * *"
   push:
     branches:
       - master
@@ -42,5 +42,5 @@ jobs:
         name: Package Preview Version of Extensions
       - run: yarn create-extension-pack:next
         name: Create built-in extensions pack
-      - run: yarn publish:vsix
-        name: Publish Extensions to open-vsx.org
+      # - run: yarn publish:vsix
+      #   name: Publish Extensions to open-vsx.org
