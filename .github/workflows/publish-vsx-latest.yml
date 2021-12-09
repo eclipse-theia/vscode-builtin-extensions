@@ -1,10 +1,10 @@
 name: ovsx-solid---publish-vscode-built-in-extensions
 on:
-  schedule:
-    - cron: "0 0 * * *"
-  push:
-    branches:
-      - master
+  # schedule:
+  #   - cron: "0 0 * * *"
+  # push:
+  #   branches:
+  #     - master
 env:
   NODE_OPTIONS: --max-old-space-size=8192
 jobs:

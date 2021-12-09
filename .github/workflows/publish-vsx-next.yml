@@ -1,7 +1,7 @@
 name: ovsx-preview--publish-vscode-built-in-extensions
 on:
-  schedule:
-    - cron: "30 0 * * *"
+  # schedule:
+  #   - cron: "30 0 * * *"
   push:
     branches:
       - master
