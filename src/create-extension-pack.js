@@ -52,7 +52,7 @@ const repository = 'https://github.com/eclipse-theia/vscode-builtin-extensions';
  * https://github.com/microsoft/vscode/blob/1.57.0/product.json#L34-L126
  */
 const externalBuiltins = ['ms-vscode.node-debug', 'ms-vscode.node-debug2', 'ms-vscode.references-view',
-    'ms-vscode.js-debug-companion', 'ms-vscode.js-debug'];
+    'ms-vscode.js-debug-companion', 'ms-vscode.vscode-js-profile-table', 'ms-vscode.js-debug'];
 
 (async () => {
     const vscodeVersion = await resolveVscodeVersion();
