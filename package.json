@@ -12,10 +12,13 @@
         "create-extension-pack:latest": "node src/create-extension-pack.js --tag latest",
         "create-extension-pack:next": "node src/create-extension-pack.js --tag next",
         "checkout-latest-vscode-release": "node src/checkout-latest-vscode.js",
-        "clean": "git clean -ffdx"
+        "get-external-builtins": "node src/get-external-builtins.js",
+        "clean": "git clean -ffdx; cd vscode && git clean -ffdx",
+        "download:dash-licenses": "curl -L 'https://repo.eclipse.org/service/local/artifact/maven/redirect?r=dash-licenses&g=org.eclipse.dash&a=org.eclipse.dash.licenses&v=LATEST' -o dash-licenses.jar"
     },
     "devDependencies": {
         "@types/archiver": "^3.0.0",
+        "@types/fs-extra": "^9.0.0",
         "@types/node": "14",
         "@types/node-fetch": "^2.5.7",
         "archiver": "^3.0.3",

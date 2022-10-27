@@ -2,3 +2,5 @@ node_modules
 lib
 *.log
 dist
+external-builtins/vscode-*
+dash-licenses.jar
