@@ -53,6 +53,13 @@ function theiaExtension(...paths) {
 function extensions(...paths) {
     return theiaExtension('extensions', ...paths);
 }
+/**
+ * Root directory where we have the external builtin extensions.
+ * @type {(...paths: string[]) => string}
+ */
+ function externalBuiltinsRepos(...paths) {
+    return root('external-builtins', ...paths);
+}
 
 /**
  * Execute `command` and returns its stdout.
@@ -70,4 +77,4 @@ async function run(command, args, cwd = process.cwd()) {
     return (await child).stdout;
 }
 
-module.exports = { root, dist, src, vscode, theiaExtension, extensions, run };
+module.exports = { root, dist, src, vscode, externalBuiltinsRepos, theiaExtension, extensions, run };
