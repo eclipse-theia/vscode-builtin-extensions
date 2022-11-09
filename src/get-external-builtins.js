@@ -22,6 +22,10 @@
  */
 const { run, externalBuiltinsRepos, vscode } = require('./paths.js');
 const fs = require('fs-extra');
+const colors = require('colors');
+colors.enable();
+/** run log */
+var log = [];
 
 CloneCheckoutExternalBuiltins();
 
@@ -36,24 +40,36 @@ async function CloneCheckoutExternalBuiltins() {
     const prodJsonExts = JSON.parse(content).builtInExtensions;
 
     for (const entry of prodJsonExts) {
-        // extract repo directory name from last part of git repo URL and
+        // extract repo directory name from last part of git repo URL
         const repoName = entry.repo.split("/").slice(-1)[0];
         /** @type string[] */
         const repoDirectories = fs.readdirSync(externalBuiltinsRepos());
         const index = repoDirectories.findIndex( function (dir) {
             if (dir == repoName) { return true; }
-        }) 
-        if (index != -1) {
-            console.info(`skipping repo already present: ${repoName}`);
-        } else {
-            console.info(`Cloning: ${entry.repo}`);
-            await clone(entry.repo, externalBuiltinsRepos());
+        });
+        try {
+            if (index != -1) {
+                console.info(`skipping repo already present: ${repoName}`);
+                log.push(`Skipped cloning (already present): ${entry.repo}`);
+            } else {
+                console.info(`Cloning: ${entry.repo}`);
+                await clone(entry.repo, externalBuiltinsRepos());
+                log.push(`Successfully cloned: ${entry.repo}`.green);
+            }
+            // Check-out the expected version tag
+            const versionTag = "v" + entry.version;
+            console.info(`checking-out: ${repoName} version: ${versionTag}`);
+            await checkout(versionTag, externalBuiltinsRepos(repoName));
+            log.push(`Successfully checked-out: ${versionTag}`.green);
+            
+        } catch (error) { 
+            console.error(error);
+            log.push(error.shortMessage.red);
         }
-        // Check-out the expected version tag
-        const versionTag = "v" + entry.version;
-        console.info(`checking-out: ${repoName} version: ${versionTag}`);
-        await checkout(versionTag, externalBuiltinsRepos(repoName));
     }
+    console.info("---------------------")
+    console.info("Summary:")
+    log.forEach( (e) => console.info(`- ${e}`) );
 }
 
 /**
@@ -62,15 +78,11 @@ async function CloneCheckoutExternalBuiltins() {
  * @param {string} dir directory in which to perform the clone operation
  */
 async function clone(repo, dir) {
-    try {
-        // Avoid the command becoming interactive and prompting for 
-        // GitHub credentials when the repository is not found and 
-        // perhaps other scenarios
-        process.env.GIT_TERMINAL_PROMPT = "0";
-        await run('git', ['clone', repo], dir);
-    } catch (error) {
-        console.error(error);
-    }
+    // Avoid the command becoming interactive and prompting for 
+    // GitHub credentials when the repository is not found and 
+    // perhaps other scenarios
+    process.env.GIT_TERMINAL_PROMPT = "0";
+    await run('git', ['clone', repo], dir);
 }
 
 /**
@@ -79,11 +91,7 @@ async function clone(repo, dir) {
  * @param {string} dir directory in which the git repository resides
  */
 async function checkout(tag, dir) {
-    try {
-        await run('git', ['checkout', tag], dir);
-    } catch (error) {
-        console.error(error);
-    }
+    await run('git', ['checkout', tag], dir);
 }
 
 /**
@@ -93,4 +101,3 @@ async function checkout(tag, dir) {
  * @property {string} version
  * @property {string} repo
  */
-

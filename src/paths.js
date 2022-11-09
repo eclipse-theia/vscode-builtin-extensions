@@ -16,6 +16,7 @@
 
 // @ts-check
 const path = require('path');
+const fs = require('fs-extra');
 
 /**
  * @type {(...paths: string[]) => string}
@@ -54,11 +55,16 @@ function extensions(...paths) {
     return theiaExtension('extensions', ...paths);
 }
 /**
- * Root directory where we have the external builtin extensions.
+ * Root directory where we have the external builtin extensions. 
+ * Dynamically created if it does not yet exists
  * @type {(...paths: string[]) => string}
  */
  function externalBuiltinsRepos(...paths) {
-    return root('external-builtins', ...paths);
+    const externalExtensions = root("external-builtins", ...paths);
+    if (! fs.pathExistsSync(externalExtensions) ) {
+        fs.mkdirSync(externalExtensions);
+    }
+    return externalExtensions;
 }
 
 /**
