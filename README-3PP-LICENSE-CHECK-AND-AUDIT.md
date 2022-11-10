@@ -2,7 +2,7 @@
 
 Note: Further automation is possible for the future, but for now we will document how to do most of this semi-manually (tools are used but could be better integrated in this repo). For example we have a better integration for `dash-licenses` in the main Theia repo, and intend to make it re-usable. When that happens, we can use it in this repo here, too.
 
-First, we need to do a few things to make sure we start start with a known state:
+First, we need to do a few things to make sure we start with a known state:
 
 ```bash
 # clean-up the repo
@@ -34,11 +34,11 @@ export DASH_LICENSES_JAR=${PWD}/dash-licenses.jar
 
 # Run dash-licenses on each yarn project - a summary.txt file will be created, 
 # that contains the results
-find vscode/extensions -name yarn.lock -exec bash -c "cd \`dirname {}\` && pwd && java -jar $DASH_LICENSES_JAR yarn.lock -timeout 120 -batch 20 -summary ./summary.txt" \;
+find vscode/extensions -name yarn.lock ! -path '*node_modules*' -exec bash -c "cd \`dirname {}\` && pwd && java -jar $DASH_LICENSES_JAR yarn.lock -timeout 120 -batch 20 -summary ./summary.txt" \;
 
 # gather all output files and filter for restricted 3PPs:
-#cat vscode/extensions/*/summary.txt | grep restricted | sort | uniq
-find vscode/extensions -name summary.txt -exec bash -c "cat {} | grep restricted | sort | uniq" \;
+find vscode/extensions -name summary.txt -exec bash -c "cat {} | grep restricted >> summary-restricted.txt" \; &&  grep restricted summary-restricted.txt | sort | uniq && rm summary-restricted.txt
+
 ```
 
 ```bash
@@ -50,7 +50,7 @@ export DASH_LICENSES_TOKEN=<token>
 
 # run dash-licenses in review mode, that automatically submits suspicious 
 # dependencies for review, by the Eclipse Foundation IP team.
-find vscode/extensions -name yarn.lock -exec bash -c "cd \`dirname {}\` && pwd && java -jar $DASH_LICENSES_JAR yarn.lock -timeout 120 -batch 20 -summary ./summary.txt -review -token $DASH_LICENSES_TOKEN -project ecd.theia" \;
+find vscode/extensions -name yarn.lock ! -path '*node_modules*' -exec bash -c "cd \`dirname {}\` && pwd && java -jar $DASH_LICENSES_JAR yarn.lock -timeout 120 -batch 20 -summary ./summary.txt -review -token $DASH_LICENSES_TOKEN -project ecd.theia" \;
 ```
 
 ### Security vulnerability audit (builtins)
@@ -58,7 +58,7 @@ find vscode/extensions -name yarn.lock -exec bash -c "cd \`dirname {}\` && pwd &
 The vscode repo uses `yarn`, so we can use `yarn audit` on the individual extensions directories, that each contain a small `yarn` sub-project (at least those that have code). We are mostly interested in runtime vulnerabilities (vs dev and test) of level `high` and up.
 
 ```bash
-find vscode/extensions/ -type f \( -name yarn.lock \) -exec bash -c "cd \`dirname {}\` && pwd && yarn audit --level high --groups dependencies" \;
+find vscode/extensions/ -name yarn.lock ! -path '*node_modules*' -exec bash -c "cd \`dirname {}\` && pwd && yarn audit --level high --groups dependencies" \;
 ```
 
 ## External builtin vscode extensions
@@ -95,13 +95,12 @@ export DASH_LICENSES_JAR=${PWD}/dash-licenses.jar
 
 # Run dash-licenses on each repo - a summary.txt file will be created, 
 # that contains the results
-find external-builtins -name yarn.lock -exec bash -c "cd \`dirname {}\` && pwd && java -jar $DASH_LICENSES_JAR yarn.lock -timeout 120 -batch 20 -summary ./summary.txt" \;
+find external-builtins -name yarn.lock ! -path '*node_modules*' -exec bash -c "cd \`dirname {}\` && pwd && java -jar $DASH_LICENSES_JAR yarn.lock -timeout 120 -batch 20 -summary ./summary.txt" \;
 
-find external-builtins -name package-lock.json -exec bash -c "cd \`dirname {}\` && pwd && java -jar $DASH_LICENSES_JAR package-lock.json -timeout 120 -batch 20 -summary ./summary.txt" \;
+find external-builtins -name package-lock.json ! -path '*node_modules*' -exec bash -c "cd \`dirname {}\` && pwd && java -jar $DASH_LICENSES_JAR package-lock.json -timeout 120 -batch 20 -summary ./summary.txt" \;
 
 # gather all output files and filter for restricted 3PPs:
-# cat external-builtins/*/summary.txt | grep restricted | sort | uniq
-find external-builtins -name summary.txt -exec bash -c "cat {} | grep restricted | sort | uniq" \;
+find external-builtins -name summary.txt -exec bash -c "cat {} | grep restricted >> summary-restricted.txt" \; &&  grep restricted summary-restricted.txt | sort | uniq && rm summary-restricted.txt
 ```
 
 ```bash
