@@ -49,9 +49,9 @@ const repository = 'https://github.com/eclipse-theia/vscode-builtin-extensions';
  * The following are external builtin extensions suitable to be included in the 'builtin-extension-pack'
  * The source code of these external extensions is not included in the vscode repository but are however
  * fetched by vscode at build time.
- * https://github.com/microsoft/vscode/blob/1.57.0/product.json#L34-L126
+ * file://./..//vscode/product.json#builtInExtensions
  */
-const externalBuiltins = ['ms-vscode.node-debug', 'ms-vscode.node-debug2', 'ms-vscode.references-view',
+const externalBuiltins = ['ms-vscode.references-view',
     'ms-vscode.js-debug-companion', 'ms-vscode.js-debug'];
 
 (async () => {

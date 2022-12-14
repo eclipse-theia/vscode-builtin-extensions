@@ -43,7 +43,7 @@ const { tag, force } = yargs.option('tag', {
 // extensions we do not want to package/publish, that
 // would otherwise be
 const to_skip = new Set();
-to_skip.add('vscode-account');
+to_skip.add('microsoft-authentication');
 
 const repository = {
     type: 'git',
