@@ -148,6 +148,8 @@ const repository = {
 
         if (tag === 'next') {
             pck.preview = true;
+        } else {
+            pck.preview = false;
         }
 
         // avoid having vsce run scripts during packaging, such as "vscode-prepublish"
