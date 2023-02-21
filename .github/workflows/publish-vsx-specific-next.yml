@@ -28,7 +28,7 @@ jobs:
         name: Setup Build Environment
       - uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
       - run: npx ovsx --version
         name: Check ovsx version
       - run: yarn
