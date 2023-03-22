@@ -31,7 +31,9 @@ jobs:
           node-version: 16
       - run: npx ovsx --version
         name: Check ovsx version
-      - run: yarn
+      - run: |
+          yarn
+          yarn prepare:extensions
         name: Bundle Extensions
       - run: yarn package-vsix:latest
         name: Package Solid Version of Extensions

@@ -2,7 +2,7 @@
     "private": true,
     "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
     "scripts": {
-        "prepare": "yarn build:extensions && yarn bundle:extensions",
+        "prepare:extensions": "yarn build:extensions && yarn bundle:extensions",
         "build:extensions": "yarn --cwd vscode && yarn compile:extensions",
         "compile:extensions": "cross-env NODE_OPTIONS=--max-old-space-size=8192 node ./src/compile.js",
         "bundle:extensions": "cross-env NODE_OPTIONS=--max-old-space-size=8192 node ./src/bundle.js",

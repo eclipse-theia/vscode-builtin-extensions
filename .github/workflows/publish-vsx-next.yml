@@ -36,7 +36,9 @@ jobs:
           git fetch --tags
           git reset --hard origin/main
         name: Reset to latest vscode main
-      - run: yarn
+      - run: |
+          yarn
+          yarn prepare:extensions
         name: Bundle Extensions from vscode main
       - run: yarn package-vsix:next
         name: Package Preview Version of Extensions
