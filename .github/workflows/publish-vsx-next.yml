@@ -38,7 +38,7 @@ jobs:
         name: Reset to latest vscode main
       - run: |
           yarn
-          yarn prepare:extensions
+          yarn build:extensions
         name: Bundle Extensions from vscode main
       - run: yarn package-vsix:next
         name: Package Preview Version of Extensions
