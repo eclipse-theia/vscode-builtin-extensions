@@ -39,7 +39,7 @@ jobs:
           cd ..
           yarn checkout-latest-vscode-release
         name: Update vscode Repo and Checkout Latest Official Release
-      - run: yarn prepare:extensions
+      - run: yarn build:extensions
         name: Bundle Extensions
       - run: yarn package-vsix:latest
         name: Package Solid Version of Extensions
