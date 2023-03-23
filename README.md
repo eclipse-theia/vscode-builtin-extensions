@@ -39,6 +39,7 @@ Pick a specific vscode version (optional)
 ## Build
 
     yarn
+    yarn build:extensions
 
 ## Packaging a built-in vscode extension.
 

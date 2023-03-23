@@ -14,6 +14,7 @@ cd vscode && git checkout 1.55.2 && cd ..
 # run 'yarn` to install the repo's dependencies. You do not need to
 # let it complete the builtin extensions build, for the current purpose
 yarn
+yarn build:extensions
 ```
 
 ## "internal" builtin vscode extensions
