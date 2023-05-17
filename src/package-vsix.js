@@ -29,7 +29,7 @@ const yargs = require('yargs');
 const capitalize = require('capitalize');
 const { dist, extensions, vscode } = require('./paths.js');
 const { computeVersion, isPublished } = require('./version');
-const vsce = require('vsce');
+const vsce = require('@vscode/vsce');
 
 const { tag, force } = yargs.option('tag', {
     choices: ['latest', 'next']
@@ -135,6 +135,11 @@ const repository = {
         pck.repository = repository;
         pck.version = version;
         pck.license = 'SEE LICENSE IN LICENSE-vscode.txt';
+        const engine = pck.engines.vscode;
+        // Correct invalid semantic engine version
+        if (typeof(engine) === 'string') {
+            pck.engines.vscode = engine.replace('x', '0');
+        }
 
         // Prevent 'vsce' packaging errors by removing the specified icon if it does not exist.
         // When an icon is not provided a default icon will be applied by the registry.
@@ -165,7 +170,8 @@ const repository = {
             await vsce.createVSIX({
                 'cwd': extensions(extension),
                 'packagePath': dist(),
-                'useYarn': true
+                'useYarn': true,
+                'allowStarActivation': true
             });
             result.push('successfully packaged: ' + pck.name);
         } catch (e) {

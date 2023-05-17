@@ -14,11 +14,35 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
+const fs = require('fs');
+const path = require('path');
 // @ts-check
-const { src, vscode, run } = require('./paths.js');
+const { src, vscode, run, vscodeExtensions } = require('./paths.js');
+
 if (process.cwd() !== vscode()) {
     run('node', [src('compile.js')], vscode());
 } else {
-    const { compileExtensionsBuildTask } = require('../vscode/build/gulpfile.extensions.js')
+    compileExtensions();
+}
+
+async function compileExtensions() {
+    // @ts-ignore
+    const { compileExtensionsBuildTask, compileWebExtensionsTask } = require('../vscode/build/gulpfile.extensions.js')
+    await createMissingLockFiles(vscodeExtensions());
     compileExtensionsBuildTask();
+    compileWebExtensionsTask();
+}
+
+async function createMissingLockFiles(extensionsPath) {
+    let subFolderNames = fs.readdirSync(extensionsPath, { withFileTypes: true })
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name);
+
+    for (let subFolderName of subFolderNames) {
+        let subFolderPath = path.join(extensionsPath, subFolderName);
+        let yarnLockExists = fs.existsSync(path.join(subFolderPath, 'yarn.lock'));
+        if (!yarnLockExists) {
+            await run('yarn', ['install'], subFolderPath );
+        }
+    }
 }
