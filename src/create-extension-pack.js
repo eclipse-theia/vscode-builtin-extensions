@@ -24,11 +24,11 @@
 // @ts-check
 const fs = require('fs-extra');
 const path = require('path');
-const vsce = require('vsce');
+const vsce = require('@vscode/vsce');
 const yargs = require('yargs');
 
 const { computeVersion, resolveVscodeVersion, isPublished } = require('./version');
-const { dist, extensions, theiaExtension } = require('./paths.js');
+const { dist, extensions, run, theiaExtension } = require('./paths.js');
 
 const { tag, force } = yargs.option('tag', {
     choices: ['latest', 'next']
@@ -98,6 +98,7 @@ const externalBuiltins = ['ms-vscode.js-debug-companion', 'ms-vscode.js-debug'];
     fs.writeFileSync(licensePath, generateLicense());
     fs.writeFileSync(readmePath, generateReadme());
 
+    await createYarnLock(packFolderPath);
     await vsce.createVSIX({
         'cwd': packFolderPath,
         'packagePath': dist(),
@@ -158,6 +159,13 @@ const externalBuiltins = ['ms-vscode.js-debug-companion', 'ms-vscode.js-debug'];
         return isPublished(extensionVersion, extensionName, namespace);
     }
 })();
+
+/**
+ * @param {string} folderPath 
+ */
+async function createYarnLock(folderPath) {
+    await run('yarn', ['install'], folderPath);
+}
 
 function generateLicense() {
     const date = new Date();

@@ -42,6 +42,14 @@ function src(...paths) {
 function vscode(...paths) {
     return root('vscode', ...paths);
 }
+
+/**
+ * @type {(...paths: string[]) => string}
+ */
+function vscodeExtensions(...paths) {
+    return vscode('extensions', ...paths);
+}
+
 /**
  * @type {(...paths: string[]) => string}
  */
@@ -83,4 +91,4 @@ async function run(command, args, cwd = process.cwd()) {
     return (await child).stdout;
 }
 
-module.exports = { root, dist, src, vscode, externalBuiltinsRepos, theiaExtension, extensions, run };
+module.exports = { root, dist, src, vscode, externalBuiltinsRepos, theiaExtension, extensions, run, vscodeExtensions };

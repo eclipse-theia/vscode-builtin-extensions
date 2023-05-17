@@ -18,7 +18,10 @@
 const rimraf = require('../vscode/node_modules/rimraf');
 const vfs = require('../vscode/node_modules/vinyl-fs');
 const ext = require('../vscode/build/lib/extensions');
-const { theiaExtension, extensions, run } = require('./paths.js');
+const { theiaExtension, extensions, run, vscodeExtensions } = require('./paths.js');
+
+const fs = require('fs');
+const path = require('path');
 
 rimraf.sync(extensions());
 (async () => {
@@ -28,5 +31,31 @@ rimraf.sync(extensions());
             .on('error', reject)
             .on('end', resolve);
     });
+    copyYarnLock(vscodeExtensions(), extensions())
     await run('yarn', ['install', '--production'], extensions('emmet'));
 })();
+
+/**
+ * The 'yarn.lock' file is now required by the 'vsce' cli.
+ * This method copies it from the given source folder to a corresponding
+ * folder in the target.
+ * 
+ * The method assumes that for each subfolder in the target a corresponding
+ * subfolder with the same name exists in the source folder.
+ * 
+ * @param {string} sourceDir - The path of the source folder.
+ * @param {string} targetDir - The path of the destination folder.
+ */
+function copyYarnLock(sourceDir, targetDir) {
+    let subFolderNames = fs.readdirSync(targetDir, { withFileTypes: true })
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name);
+
+    for (let subFolderName of subFolderNames) {
+        let sourceYarnLockPath = path.join(sourceDir, subFolderName, 'yarn.lock');
+        if (fs.existsSync(sourceYarnLockPath)) {
+            console.log(`copying: ${sourceYarnLockPath} ${path.join(targetDir, subFolderName)}`);
+            fs.copyFileSync(sourceYarnLockPath, path.join(targetDir, subFolderName, 'yarn.lock'));
+        }
+    }
+}
