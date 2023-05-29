@@ -79,13 +79,20 @@ async function publishExtension(vsix) {
     // Determine if the extension/version is already published.
     try {
         let found = await isPublished(version, extension);
+        let message = `Successfully published extension: ${vsix}\n`;
         if (found) {
             console.log(`Extension ${extension} v${version} is already published - skipping!`);
         } else {
             console.log('Publishing: ', dist(vsix), ' ...');
-            await ovsx.publish({ extensionFile: dist(vsix), yarn: true });
+            const results = await ovsx.publish({ extensionFile: dist(vsix), yarn: true });
+            for (const result of results) {
+                if (result.status === 'rejected') {
+                    message = `Error(s) Generated when publishing ${extension} v${version}!`;
+                    console.log(result.reason);
+                }
+            }
+            console.log(message);
         }
-        console.log(`Successfully published extension: ${vsix}\n`);
         return vsix;
     } catch (e) {
         console.error(`Skipping publishing of: ${vsix}.\n`);
