@@ -54,11 +54,14 @@ async function resolveVscodeVersion() {
  * set registry (default: https://open-vsx.org)
  */
 async function isPublished(version, extension, namespace = 'vscode') {
-    let registry = process.env.OVSX_REGISTRY_URL ? process.env.OVSX_REGISTRY_URL : OPEN_VSX_ORG_URL;
-    const response = await fetch(`${registry}/api/${namespace}/${extension}/${version}`);
-    const json = await response.json();
-    // namespace/ext/version not found
-    return !json.error;
+    try {
+        const registry = process.env.OVSX_REGISTRY_URL ? process.env.OVSX_REGISTRY_URL : OPEN_VSX_ORG_URL;
+        const response = await fetch(`${registry}/api/${namespace}/${extension}/${version}`);
+        return response.ok;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
 }
 
 module.exports = { computeVersion, isPublished, resolveVscodeVersion };
