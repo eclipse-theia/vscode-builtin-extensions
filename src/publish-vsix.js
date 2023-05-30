@@ -40,7 +40,7 @@ const packName = 'builtin-extension-pack';
     const extensions = fs.readdirSync(dist());
 
     /** The queue for individual builtin extensions. */
-    const builtinQueue = new PQueue({ concurrency: 4 });
+    const builtinQueue = new PQueue({ concurrency: 1 });
     /** The queue for extension packs. */
     const packQueue = new PQueue({ concurrency: 1 });
 
