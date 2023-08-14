@@ -19,7 +19,7 @@
 /**
  * version-related utility functions
  */
-const fetch = require('node-fetch');
+const {default : fetch} = require('node-fetch');
 const fs = require('fs')
 const { run, vscode } = require('./paths.js');
 
@@ -56,7 +56,9 @@ async function resolveVscodeVersion() {
 async function isPublished(version, extension, namespace = 'vscode') {
     try {
         const registry = process.env.OVSX_REGISTRY_URL ? process.env.OVSX_REGISTRY_URL : OPEN_VSX_ORG_URL;
-        const response = await fetch(`${registry}/api/${namespace}/${extension}/${version}`);
+        let url = `${registry}/api/${namespace}/${extension}`;
+        if (version) { url += "/" + version; }
+        const response = await fetch(url);
         return response.ok;
     } catch (e) {
         console.log(e);
