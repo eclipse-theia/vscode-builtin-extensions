@@ -12,8 +12,8 @@ Install [nvm](https://github.com/creationix/nvm#install-script).
 
 Install npm and node.
 
-    nvm install 14
-    nvm use 14
+    nvm install 18
+    nvm use 18
 
 NOTE: To re-build older `vscode` extensions requiring node 12, use the branch `node-12` on this repository and follow the corresponding `README.md` on that branch.
 
