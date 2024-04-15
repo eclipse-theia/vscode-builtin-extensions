@@ -44,9 +44,7 @@ async function CloneCheckoutExternalBuiltins() {
         const repoName = entry.repo.split("/").slice(-1)[0];
         /** @type string[] */
         const repoDirectories = fs.readdirSync(externalBuiltinsRepos());
-        const index = repoDirectories.findIndex( function (dir) {
-            if (dir == repoName) { return true; }
-        });
+        const index = repoDirectories.indexOf(repoName);
         try {
             if (index != -1) {
                 console.info(`skipping repo already present: ${repoName}`);
