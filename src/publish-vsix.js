@@ -28,7 +28,6 @@
  */
 // @ts-check
 const fs = require('fs')
-const os = require('os');
 const ovsx = require('ovsx');
 const { dist } = require('./paths.js');
 const { isPublished } = require('./version');

@@ -13,7 +13,11 @@
         "checkout-latest-vscode-release": "node src/checkout-latest-vscode.js",
         "get-external-builtins": "node src/get-external-builtins.js",
         "clean": "git clean -ffdx; cd vscode && git clean -ffdx",
-        "download:dash-licenses": "curl -L 'https://repo.eclipse.org/service/local/artifact/maven/redirect?r=dash-licenses&g=org.eclipse.dash&a=org.eclipse.dash.licenses&v=LATEST' -o dash-licenses.jar"
+        "download:dash-licenses": "node ./src/download.js --url=\"https://repo.eclipse.org/service/local/artifact/maven/redirect?r=dash-licenses&g=org.eclipse.dash&a=org.eclipse.dash.licenses&v=LATEST\" --out=dash-licenses.jar",
+        "ip-check:builtin": "node ./src/check-dependencies.js --dir vscode/extensions",
+        "ip-check:external": "node ./src/check-dependencies.js --dir external-builtins",
+        "archive:builtin": "node ./src/archive-source.js --mode builtin",
+        "archive:external": "node ./src/archive-source.js --mode external"
     },
     "devDependencies": {
         "@types/archiver": "^3.0.0",
@@ -24,11 +28,13 @@
         "capitalize": "^2.0.2",
         "colors": "^1.4.0",
         "cross-env": "^7.0.3",
-        "execa": "^6.0.0",
+        "execa": "^8.0.1",
         "fs-extra": "^10.0.0",
+        "glob": "^7.2.3",
         "node-fetch": "^2.6.0",
         "ovsx": "^0.8.1",
         "p-queue": "^2.4.2",
+        "@vscode/ripgrep": "1.15.9",
         "yargs": "^17.0.0"
     },
     "workspaces": [
