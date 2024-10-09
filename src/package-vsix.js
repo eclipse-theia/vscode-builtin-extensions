@@ -170,7 +170,7 @@ const repository = {
             await vsce.createVSIX({
                 'cwd': extensions(extension),
                 'packagePath': dist(),
-                'useYarn': true,
+                'useYarn': false,
                 'allowStarActivation': true
             });
             result.push('successfully packaged: ' + pck.name);

@@ -41,9 +41,9 @@ async function createMissingLockFiles(extensionsPath) {
 
     for (let subFolderName of subFolderNames) {
         let subFolderPath = path.join(extensionsPath, subFolderName);
-        let yarnLockExists = fs.existsSync(path.join(subFolderPath, 'yarn.lock'));
-        if (!yarnLockExists) {
-            await run('yarn', ['install'], subFolderPath );
+        let packageLockExists = fs.existsSync(path.join(subFolderPath, 'package-lock.json'));
+        if (!packageLockExists) {
+            await run('npm', ['install'], subFolderPath );
         }
     }
 }

@@ -10,8 +10,7 @@ Every sub-folder of vscode/extensions/ is one built-in vscode extension (with a 
 
 ## Getting started
 
-Building the built-in `*.vsix` files locally is described in [Building.md](./doc/Building.md). If you need to publish a new version of the built-ins for use with Theia, please follow the 
-process described in [Publishing.md](./doc/Publishing.md). 
+Building the built-in `*.vsix` files locally is described in [Building.md](./doc/Building.md). If you need to publish a new version of the built-ins for use with Theia, please follow the process described in [Publishing.md](./doc/Publishing.md).
 
 ## License
 
@@ -21,4 +20,4 @@ process described in [Publishing.md](./doc/Publishing.md).
 ## Trademark
 
 "Theia" is a trademark of the Eclipse Foundation
-https://www.eclipse.org/theia
+<https://www.eclipse.org/theia>
