@@ -98,11 +98,11 @@ const externalBuiltins = ['ms-vscode.js-debug-companion', 'ms-vscode.js-debug'];
     fs.writeFileSync(licensePath, generateLicense());
     fs.writeFileSync(readmePath, generateReadme());
 
-    await createYarnLock(packFolderPath);
+    await createPackageLock(packFolderPath);
     await vsce.createVSIX({
         'cwd': packFolderPath,
         'packagePath': dist(),
-        'useYarn': true
+        'useYarn': false
     });
 
     async function resolveExtensions(extensionsArr) {
@@ -163,8 +163,8 @@ const externalBuiltins = ['ms-vscode.js-debug-companion', 'ms-vscode.js-debug'];
 /**
  * @param {string} folderPath 
  */
-async function createYarnLock(folderPath) {
-    await run('yarn', ['install'], folderPath);
+async function createPackageLock(folderPath) {
+    await run('npm', ['install'], folderPath);
 }
 
 function generateLicense() {
