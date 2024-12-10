@@ -121,41 +121,18 @@ check out the correct version of VS Code upon `git submodule update`. The conven
 
 ## Publishing to openvsx.org
 
-**Before publishing to open-vsx, all issues opened in [internal](#ip-checks-for-vs-code-built-ins) and [external](#ip-checks-for-external-vs-code-built-ins) should be closed.**
-Please work with the Eclipse Foundation staff and the Theia community if there are problems!
+> [!IMPORTANT] 
+> **Before publishing to open-vsx, all issues opened in [internal](#ip-checks-for-vs-code-built-ins) and [external](#ip-checks-for-external-vs-code-built-ins) should be closed.**
+> Please work with the Eclipse Foundation staff and the Theia community if there are problems!
 
 Publishing is done using GitHub Actions. In the vscode-builtin-extensions repo, a publish token for open-vsx.org has been set, that can be used to publish under the identity of the openvsx publish bot.
 
-There are four workflows in this repo.
+Both these Actions are triggered on a workflow dispatch, upon push to the master branch, and in PRs.
+They only act on the currently selected `vscode` submodule commit in the specified branch. They do not fetch or pull any new data from the `microsoft/vscode` upstream repository.
 
-- **publish-vsx-latest.yml:** Will check out the latest tagged version of VS Code and builds and packages a release version of the extensions and extension pack
-- **publish-vsix-next.yml:** Will check out the VS Code `main branch` and build a prerelase version.
+- **publish-vsx-specific-latest:** Creates and packages a **release** version of the built-ins.
+- **publish-vsx-specific-next:** Creates and packages a **prerelease** version of the built-ins.
 
-both these workflows are triggered on a regular schedule and upon push to the master branch
+If triggered by a workflow dispatch trigger, the built extensions are **published to open vsx**.
 
-- **publish-vsx-specific-latest:** This action is triggered upon pushes to the branch `ovsx-publish`. It checks out the version of VS Code that is checked in as a submodule
-on the branch and creates and packages a release version of the built-ins. It then publishes the built-ins and extension pack to the open-vsx registry.
-- **publish-vsx-specific-next:** This action is triggered upon pushes to the branch `ovsx-publish-next`. It checks out the version of VS Code that is checked in as a submodule
-on the branch and creates and packages a prerelease version of the built-ins. It then publishes the built-ins and extension pack to the open-vsx registry.
-
-For "regular" vs. "prerelease" vesions see [Building.md](./Building.md))
-
-In order to publish updated built-ins, we replace the contents of the `osvx-publish` branch. First, we make sure we're on the branch we're created in the "Testing" section:
-
-    git checkout 1.72.2
-    git branch -D ovsx-publish  # delete the local version of the publsh branch
-    git checkout -b osvx-publish # copy our current branch to `osvx-publish`
-    git push origin # if the push fails because the branch can't be fast-forwarded, add the `-f` flag 
-
-Go in the [Actions](https://github.com/eclipse-theia/vscode-builtin-extensions/actions) tab to observe the publishing progress.
-
-The publish workflow may fail, usually because the prerequisites for building the built-ins have changed. In this case, make the necessary change in the relevant workflows. In general, the setup should be aligned with the CI setup of VS Code:
-<https://github.com/microsoft/vscode/blob/main/.github/workflows/ci.yml#L107>. **Make sure you updated all the workflows that may be affected.**
-Now push to `osvx-publish` again. Repeat until the publish succeeds.
-
-Now we make a copy of the publish branch "for the record":
-
-    git checkout -b old-ovsx-publish-<major>.<minor>.<patch>
-    git push origin
-
-At this point, make sure the also apply all changes you had to make to get the publish to succeed in the `master` branch as well.
+For "regular" vs. "prerelease" versions see [Building.md](./Building.md).
