@@ -28,13 +28,10 @@ const os = require('os');
 const yargs = require('yargs');
 const capitalize = require('capitalize');
 const { dist, extensions, vscode } = require('./paths.js');
-const { computeVersion, isPublished } = require('./version');
+const { resolveVscodeVersion, isPublished } = require('./version');
 const vsce = require('@vscode/vsce');
 
-const { tag, force } = yargs.option('tag', {
-    choices: ['latest', 'next']
-}).demandOption('tag')
-.option('force', {
+const { force } = yargs.option('force', {
     description: 'package extensions even if found to be already published',
     boolean: true,
     default: false
@@ -51,10 +48,8 @@ const repository = {
 };
 
 (async () => {
-    // compute the version we'll use, given the type of packaging
-    // (latest/solid vs next/preview) and current vscode git submodule
-    // commit checked-out
-    let version = await computeVersion(tag);
+    // compute the version based on the current vscode git submodule commit checked-out
+    let version = await resolveVscodeVersion();
     console.log(`Packaging builtins from VS Code version: ${version}\n`);
 
     const result = [];
@@ -149,12 +144,6 @@ const repository = {
             if (!fs.existsSync(iconPath)) {
                 delete pck.icon;
             }
-        }
-
-        if (tag === 'next') {
-            pck.preview = true;
-        } else {
-            pck.preview = false;
         }
 
         // avoid having vsce run scripts during packaging, such as "vscode-prepublish"
