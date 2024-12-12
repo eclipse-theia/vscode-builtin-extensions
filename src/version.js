@@ -21,28 +21,9 @@
  */
 const {default : fetch} = require('node-fetch');
 const fs = require('fs')
-const { run, vscode } = require('./paths.js');
+const { vscode } = require('./paths.js');
 
 const OPEN_VSX_ORG_URL = 'https://open-vsx.org'
-
-/**
- * Returns the version to use when packaging built-in extensions. Based
- * on VS Code submodule version and whether it's to be a solid or preview
- * release
- *
- * @param {'latest' | 'next'} releaseType
- * @returns {Promise<string>}
- */
-async function computeVersion(releaseType) {
-    let version = await resolveVscodeVersion();
-    // Use VS Code version and SHA when packaging 'next':
-    if (releaseType === 'next') {
-        const [major, minor, bugfix] = version.split('.');
-        const shortRevision = await run('git', ['rev-parse', '--short', 'HEAD'], vscode());
-        version = `${major}.${minor}.${bugfix}-next.${shortRevision}`;
-    }
-    return version;
-}
 
 async function resolveVscodeVersion() {
     const { version = '0.0.1' } = JSON.parse(await fs.promises.readFile(vscode('package.json'), 'utf-8'));
@@ -66,4 +47,4 @@ async function isPublished(version, extension, namespace = 'vscode') {
     }
 }
 
-module.exports = { computeVersion, isPublished, resolveVscodeVersion };
+module.exports = { isPublished, resolveVscodeVersion };
