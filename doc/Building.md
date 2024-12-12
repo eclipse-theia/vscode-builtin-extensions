@@ -39,28 +39,21 @@ Remove part saying `mode: production` and redo the build
 
 Once we have built our extensions, we can packge them into `*.vsix`-files using this package script:
 
-    yarn package-vsix:latest
+    yarn package-vsix
 
 The script will produce `*.vsix` files in a folder called `./dist`. The vsix files will be named like `<name>-<vscode-version>.vsix`. Note that the publisher (msvscode)
 is not included.
 
-If you want to create a prerelease version, you can do so by invoking
-
-    yarn package-vsix:next
-
-This will generate `*.vsix` files of the form `<name>-<vscode-version>-next.<commit hash>.vsix`
-
-**Implementation Note:** the VS Code build process puts some shared dependencies in a `node_modules` folder which is located in the "extensions" folder at run time. In order to produce self-contained extensions, we need to include those modules (at the time, it's the typescript language server) into the packaged extensions (currently for `typescript-language-features` and `html-language-features`). The code doing this is located in `src/package-vsix.js`. We also need to patch the `typescript-language-features` extension because it contains a hard-code reference to `../node_modules`.
+> [!NOTE]
+> The VS Code build process puts some shared dependencies in a `node_modules` folder which is located in the "extensions" folder at run time.
+> In order to produce self-contained extensions, we need to include those modules (at the time, it's the typescript language server) into the packaged extensions (currently for `typescript-language-features` and `html-language-features`).
+> The code doing this is located in `src/package-vsix.js`. We also need to patch the `typescript-language-features` extension because it contains a hard-code reference to `../node_modules`.
 
 ### Creating the built-ins extension-pack
 
-We also create an extension pack from the internal and external built-ins into the `dist` folder with a package script. The file name will be of the form:
-builtin-extension-pack-<vscode version>.vsix.
+We also create an extension pack from the internal and external built-ins into the `dist` folder with a package script.
+The file name will be of the form: `builtin-extension-pack-<vscode version>.vsix`.
 
-   yarn create-extension-pack:latest
-
-Again, we can produce a preview release of the form `builtin-extension-pack-<vscode version>-next-.vsix
-
-    yarn create-extension-pack:next
-
-Note that you will have to package the `next` versions of the built-in extensions before they can be included in a `next` extensions pack.
+```sh
+yarn create-extension-pack
+```

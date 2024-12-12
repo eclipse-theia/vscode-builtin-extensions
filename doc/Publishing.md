@@ -127,12 +127,7 @@ check out the correct version of VS Code upon `git submodule update`. The conven
 
 Publishing is done using GitHub Actions. In the vscode-builtin-extensions repo, a publish token for open-vsx.org has been set, that can be used to publish under the identity of the openvsx publish bot.
 
-Both these Actions are triggered on a workflow dispatch, upon push to the master branch, and in PRs.
-They only act on the currently selected `vscode` submodule commit in the specified branch. They do not fetch or pull any new data from the `microsoft/vscode` upstream repository.
+Building and optionally publishing the extensions is done through the `Build and Publish VS Code Extensions` workflow.
+On any pull request and push to the `master` branch, the workflow will build and package all VS Code extensions to ensure that the build scripts still work as expected.
 
-- **publish-vsx-specific-latest:** Creates and packages a **release** version of the built-ins.
-- **publish-vsx-specific-next:** Creates and packages a **prerelease** version of the built-ins.
-
-If triggered by a workflow dispatch trigger, the built extensions are **published to open vsx**.
-
-For "regular" vs. "prerelease" versions see [Building.md](./Building.md).
+Triggering the workflow through the GitHub UI using the `workflow_dispatch` trigger will additionally publish the built extensions to open-vsx.
