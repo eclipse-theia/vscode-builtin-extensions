@@ -27,17 +27,14 @@ const path = require('path');
 const vsce = require('@vscode/vsce');
 const yargs = require('yargs');
 
-const { computeVersion, resolveVscodeVersion, isPublished } = require('./version');
+const { resolveVscodeVersion, isPublished } = require('./version');
 const { dist, extensions, run, theiaExtension } = require('./paths.js');
 
-const { tag, force } = yargs.option('tag', {
-    choices: ['latest', 'next']
-}).demandOption('tag')
-    .option('force', {
-        description: 'Create extension pack even if it is found to be already available',
-        boolean: true,
-        default: false
-    }).argv;
+const { force } = yargs.option('force', {
+    description: 'Create extension pack even if it is found to be already available',
+    boolean: true,
+    default: false
+}).argv;
 
 const packageJson = 'package.json'
 const categories = ['Extension Packs'];
@@ -55,11 +52,10 @@ const externalBuiltins = ['ms-vscode.js-debug-companion', 'ms-vscode.js-debug'];
 
 (async () => {
     const vscodeVersion = await resolveVscodeVersion();
-    const packVersion = await computeVersion(tag);
-    const extPackNameAndVersion = packName + '-' + packVersion;
+    const extPackNameAndVersion = packName + '-' + vscodeVersion;
 
-    const extPackVsixPath = dist(packName + '-' + packVersion + '.vsix');
-    const extensionPackAlreadyAvailable = await isAvailable(extPackVsixPath, packName, packVersion, publisher);
+    const extPackVsixPath = dist(packName + '-' + vscodeVersion + '.vsix');
+    const extensionPackAlreadyAvailable = await isAvailable(extPackVsixPath, packName, vscodeVersion, publisher);
     if (extensionPackAlreadyAvailable && !force) {
         console.log("Exiting as this extension package is already created or published: " + extPackVsixPath);
         return;
@@ -74,7 +70,7 @@ const externalBuiltins = ['ms-vscode.js-debug-companion', 'ms-vscode.js-debug'];
     extPack.name = packName;
     extPack.displayName = packName;
     extPack.description = 'Builtin extension pack associated to a version of vscode';
-    extPack.version = packVersion;
+    extPack.version = vscodeVersion;
     extPack.publisher = publisher;
     extPack.license = 'EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0';
     extPack.categories = categories;
@@ -84,7 +80,7 @@ const externalBuiltins = ['ms-vscode.js-debug-companion', 'ms-vscode.js-debug'];
 
     if (extPack.extensionPack.length === 0) {
         process.exitCode = 1;
-        console.error('Aborting: No extension was found available for this version: ' + packVersion);
+        console.error('Aborting: No extension was found available for this version: ' + vscodeVersion);
         return;
     }
 
@@ -123,8 +119,8 @@ const externalBuiltins = ['ms-vscode.js-debug-companion', 'ms-vscode.js-debug'];
             const content = fs.readFileSync(extDataPath, 'utf-8');
             const extData = JSON.parse(content);
 
-            const extVsixPath = dist(extData.name + '-' + packVersion + '.vsix');
-            if (!(await isAvailable(extVsixPath, extData.name, packVersion))) {
+            const extVsixPath = dist(extData.name + '-' + vscodeVersion + '.vsix');
+            if (!(await isAvailable(extVsixPath, extData.name, vscodeVersion))) {
                 console.log("Skipping extension, i.e. .vsix is not found and " +
                     "neither published in the registry : " + extVsixPath);
                 continue;
