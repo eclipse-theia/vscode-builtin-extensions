@@ -23,6 +23,7 @@
         "@types/fs-extra": "^9.0.0",
         "@types/node": "14",
         "@types/node-fetch": "^2.6.0",
+        "@vscode/vsce": "2.20.1",
         "archiver": "^3.0.3",
         "capitalize": "^2.0.2",
         "colors": "^1.4.0",
