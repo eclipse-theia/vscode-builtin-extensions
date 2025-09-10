@@ -59,43 +59,24 @@ Building and packaging the built-ins is described in [Building.md](./Building.md
 ## Testing
 
 This section assumes you have a local clone of the [main Theia repo](https://github.com/eclipse-theia/theia). Please refer to the Theia documentation for instructions on how to build and
-run Theia. Some built-ins may refuse to run if the VS Code API version reported by Theia is lower that what they require. If Theia's default API verison has not been updated yet, you can
+run Theia. Some built-ins may refuse to run if the VS Code API version reported by Theia is lower that what they require. If Theia's default API version has not been updated yet, you can
 force a newer version by either setting the `VSCODE_API_VERSION` environment variable or by passing the option `--vscode-api-version <major>.<minor>.<patch>`
 
-If already present, delete folder `plugins` in your local Theia repo folder. We will instead use the built-ins we previously built
+The following script will unzip the packaged .vsix extensions, rename them and copy them to your plugins folder (e.g., could be `~/git/theia/theia/plugins/`).
+Theia does not extract .vsix files on startup anymore, this is handled bei de plugin download currently.
 
-    ```bash
-    rm -rf plugins
-    mkdir plugins
-    ```
+    npm run theia:testing <YOUR THEIA PLUGINS FOLDER>
 
-Copy the builtin extension `*.vsix` files built above to Theia's `extensions` folder (typically `~/.theia/extensions`)
-
-    ```bash
-    cp -a dist/* ~/.theia/extensions   # adjust according to where your .theia folder resides
-    ```
-
-Get rid of a few builtins that will interfere with testing (note: we keep these extensions where they were generated, but remove them from our test Theia application):
-
-    ```bash
-    cd theia  # back to theia repo
-    rm -rf plugins/ipynb-*
-    rm -rf plugins/extension-editing-*
-    ```
-
-To test vscode builtin git, we need to remove the Theia-specific git extension from the example application, for this, remove the line referring to
-`"@theia/git": "<Theia version>"` from the `package.json` of the Theia example you use for testing.
+_Note:_  The ones that are currently excluded by theia via `theiaPluginsExcludeIds`, like `github-authentication`, are skipped in this script as well.
 
 Rebuild the example and start Theia:
 
-    ```bash
     npm ci && npm run build
     npm run start:browser OR npm run start:electron
-    ```
 
 Note that startup will take a bit longer than usual while Theia unzips the *.vsix files to `~/.theia/deployedPlugins`.
 
-- [ ] Connect to `localhost:3000` with a browser
+- [ ] In case of browser example: Connect to `localhost:3000` with a browser
 - [ ] Observe backend log for new exceptions, specially during activation of builtin extensions
 - [ ] quick TypeScript test
 - [ ] quick JSON test
