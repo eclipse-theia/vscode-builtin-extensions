@@ -23,7 +23,7 @@ const { theiaExtension, extensions, run } = require('./paths.js');
 rimraf.sync(extensions());
 (async () => {
     await new Promise((resolve, reject) => {
-        ext.packageLocalExtensionsStream(false, false)
+        ext.packageAllLocalExtensionsStream(false, false)
             .pipe(vfs.dest(theiaExtension()))
             .on('error', reject)
             .on('end', resolve);

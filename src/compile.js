@@ -27,9 +27,9 @@ if (process.cwd() !== vscode()) {
 
 async function compileExtensions() {
     // @ts-ignore
-    const { compileExtensionsBuildTask, compileExtensionMediaTask, compileWebExtensionsTask } = require('../vscode/build/gulpfile.extensions.js')
+    const { compileAllExtensionsBuildTask, compileExtensionMediaTask, compileWebExtensionsTask } = require('../vscode/build/gulpfile.extensions.js')
     await createMissingLockFiles(vscodeExtensions());
-    compileExtensionsBuildTask();
+    compileAllExtensionsBuildTask();
     compileWebExtensionsTask();
     compileExtensionMediaTask();
 }
@@ -43,7 +43,7 @@ async function createMissingLockFiles(extensionsPath) {
         let subFolderPath = path.join(extensionsPath, subFolderName);
         let packageLockExists = fs.existsSync(path.join(subFolderPath, 'package-lock.json'));
         if (!packageLockExists) {
-            await run('npm', ['install'], subFolderPath );
+            await run('npm', ['install'], subFolderPath);
         }
     }
 }
