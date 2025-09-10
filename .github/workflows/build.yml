@@ -37,13 +37,13 @@ jobs:
         run: npx ovsx --version
       - name: Bundle Extensions
         run: |
-          yarn
-          yarn build:extensions
+          npm i
+          npm run build:extensions
       - name: Package Solid Version of Extensions
-        run: yarn package-vsix
+        run: npm run package-vsix
       - name: Create built-in extensions pack
-        run: yarn create-extension-pack
+        run: npm run create-extension-pack
       # Only publish the extensions if the workflow was manually triggered
       - if: ${{ github.event_name == 'workflow_dispatch' }}
         name: Publish Extensions to open-vsx.org
-        run: yarn publish:vsix
+        run: npm run publish:vsix
