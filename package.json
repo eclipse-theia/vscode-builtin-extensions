@@ -16,7 +16,8 @@
         "ip-check:builtin": "node ./src/check-dependencies.js --dir vscode/extensions",
         "ip-check:external": "node ./src/check-dependencies.js --dir external-builtins",
         "archive:builtin": "node ./src/archive-source.js --mode builtin",
-        "archive:external": "node ./src/archive-source.js --mode external"
+        "archive:external": "node ./src/archive-source.js --mode external",
+        "theia:testing": "node ./src/theia-testing.js"
     },
     "devDependencies": {
         "@types/archiver": "^3.0.0",
@@ -29,6 +30,7 @@
         "colors": "^1.4.0",
         "cross-env": "^7.0.3",
         "execa": "^8.0.1",
+        "extract-zip": "^2.0.1",
         "fs-extra": "^10.0.0",
         "glob": "^7.2.3",
         "node-fetch": "^2.6.0",
