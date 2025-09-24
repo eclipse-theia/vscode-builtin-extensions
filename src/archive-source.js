@@ -21,7 +21,7 @@ const globPromise = util.promisify(glob);
 const { root, vscodeExtensions, vscode, externalBuiltinsRepos } = require('./paths');
 const fs = require('fs');
 const path = require('path');
-const { computeVersion } = require('./version');
+const { resolveVscodeVersion } = require('./version');
 
 const yargs = require('yargs');
 
@@ -40,7 +40,7 @@ async function addExtensionToArchive(archive, extensionDir) {
     console.log(`adding extension ${extensionDir}`);
     const filesToInclude = await globPromise('**', {
         cwd: extensionDir,
-        ignore: ['**/test/**/*', '**/test-workspace/**/*'],
+        ignore: ['**/test/**/*', '**/test-workspace/**/*', '**/node_modules/**/*'],
         dot: true,
         nodir: true
     });
@@ -97,15 +97,15 @@ async function archiveExternal() {
 async function archiveBuiltins() {
     const { execa } = await import('execa');
 
-    process.stdout.write('cleaning vscode directory');
+    process.stdout.write('cleaning vscode directory...\n');
     execa('git', ['clean', '-xfd'], {
         cwd: vscode()
     });
 
     process.stdout.write('done\n');
 
-    const excludedDirs = ['vscode-colorize-tests', 'vscode-api-tests', 'microsoft-authentication']
-    const version = await computeVersion('latest');
+    const excludedDirs = ['vscode-colorize-tests', 'vscode-api-tests', 'microsoft-authentication', 'vscode-colorize-perf-tests', 'vscode-test-resolver', 'prompt-basics']
+    const version = await resolveVscodeVersion('latest');
     const zipFile = root(`vscode-built-ins-${version}.src.zip`);
 
     const archive = archiver('zip');

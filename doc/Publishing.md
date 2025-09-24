@@ -1,6 +1,6 @@
 # Publishing VS Code built-in Extensions for a given VS Code Version
 
-Publishing the VS Code built-in extensions for a given relase of VS Code entails multiple steps (in order)
+Publishing the VS Code built-in extensions for a given release of VS Code entails multiple steps (in order)
 
 1. Perform IP-checks with the Eclipse foundation for the extensions included in the VS Code repo ("builtin")
 2. Perform IP-checks with the Eclipse foundation for each extension that is included with VS Code, but with source in a different location ("external")
@@ -18,7 +18,7 @@ extensions for compatibility with the Theia license. There are a couple of packa
 
 This will run the dash-licenses tool an all extensions in the VS Code repo. To automatically open issues with the Eclipse [IP-issue tracker](https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab), you can pass a `--token` parameter to the `ip-check:builtin` script. The token is described [in the dash-licenses README](https://github.com/eclipse/dash-licenses?tab=readme-ov-file#automatic-ip-team-review-requests).
 
-    npm run ip-check:builtin --token <your gitlab token>
+    npm run ip-check:builtin -- --token <your gitlab token>
 
 Any issues will show up as opened by you (or the account owning the token) at <https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab>. In general, it's a good idea to wait for the
 IP tickets to be closed before publishing the built-in. Technically, this restriction applies to publishing the built-ins as part of an Eclipse project artifact like Theia IDE.
@@ -30,7 +30,7 @@ Generate a source zip of the extensions folder. You can use a package script tha
 
 This will `git clean` all extension directories and generate a zip file named like so: `vscode-builtins-<version>.src.zip`
 
-Open an issue that looks like this: <https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab/-/issues/11676>. Use the template "vet third party" on the new issue and fill in the templata liek in the example issue. Attach the source file generated in step one as "source". Since there is no real "clearlydefined id" for the built-ins, we set the title of the issue to `project/ecd.theia/-/vscode-builtin-extensions/<VS Code version>`
+Open an issue that looks like this: <https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab/-/issues/11676>. Use the template "vet third party" on the new issue and fill in the template link in the example issue. Attach the source file generated in step one as "source". Since there is no real "clearlydefined id" for the built-ins, we set the title of the issue to `project/ecd.theia/-/vscode-builtin-extensions/<VS Code version>`
 
 ## IP checks for external VS Code built-ins
 
@@ -42,10 +42,10 @@ the correct tag into a folder named `external-builtins`.
 
 We now have to run the checks for the dependencies of those extensions:
 
-    npm run ip-check:external --token <your gitlab token>
+    npm run ip-check:external -- --token <your gitlab token>
 
 Again, this will open issues with the Eclipse IP issue tracker. Once this is done, it's time to open an ip-check issue for the content of each of the external built ins.
-For extensions from github, it's usually enough to open a "vet third party" issue with just the project in the details, like this one: <https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab/-/issues/14430>. The title should be the clearlydefined id of the form `git/github/<github org>/<project>/v<version>`. The IP-check bot is usually able to download the source from the github release page on its own. In the issue template, just fill in the "project" field.
+For extensions from github, it's usually enough to open a "vet third party" issue with just the project in the details, like this one: <https://gitlab.eclipse.org/eclipsefdn/emo-team/iplab/-/issues/14430>. The title should be the "clearlydefined" id of the form `git/github/<github org>/<project>/v<version>`. The IP-check bot is usually able to download the source from the github release page on its own. In the issue template, just fill in the "project" field.
 If the IP-check bot cannot figure out the source (it will ask for source in a comment on the issue), you can zip up the source of all external built-ins into files of the form `<publisher>.<name>-<version>.src.zip>` with a package script:
 
     npm run archive:external
@@ -85,17 +85,11 @@ Note that startup will take a bit longer than usual while Theia unzips the *.vsi
 
 File issues for problems found. Some problems may require changing how we build or package, in which case a fix would be made on `vscode-builtin-extensions` as part of the ongoing release PR. If the issue is with the upstream Theia repo, we open the issue there.
 
-While testing buitins 1.72.2, we found the following, for example:
-
-- [RangeError: Maximum call stack size exceeded with recent vscode.html builtin extension #12434](https://github.com/eclipse-theia/theia/issues/12434)
-- [[builtins] [proposed API] [vscode.markdown-language-features]: Theia misses proposed API: `Document Paste`](https://github.com/eclipse-theia/theia/issues/12430)
-- [[builtins] [proposed API] [vscode.git@1.72.2]: Theia misses proposed API: `Edit session identifier provider`](https://github.com/eclipse-theia/theia/issues/12437)
-
 Once you are confident that the new set of builtins do not have obvious issues, you can proceed with publishing them to `open-vsx.org`. It's ok if there are issues that will later be fixed in Theia - older version of the builtin can be temporarily used instead in most cases.
 
 Now it's time to open a PR against master. The convention is to create a branch that is named after the version of VS Code wer're using:
 
-    git checkout -b <major>.<minor>.<patch>  # replace the version here wiht the VS Code version, for example "1.88.1" 
+    git checkout -b <major>.<minor>.<patch>  # replace the version here with the VS Code version, for example "1.88.1" 
 
 Now commit all changes you had to make to get the built-ins to correctly build, **including the `vscode` folder**. Adding `vscode` will update the submodule configuration n this repo to
 check out the correct version of VS Code upon `git submodule update`. The convention is to make a single commit named `changes for builtins v<major>.<minor>.<patch>`. Open a PR and have it reviewed as usual.
