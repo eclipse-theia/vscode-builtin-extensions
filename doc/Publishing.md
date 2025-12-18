@@ -60,7 +60,10 @@ Building and packaging the built-ins is described in [Building.md](./Building.md
 
 As an alternative to publishing on open-vsx.org, you can compress all packaged `.vsix` files into a single `tar.gz` archive for self-hosting (e.g., on GitHub Releases).
 
-You can create the archive locally:
+To create an archive using GitHub Actions, use the `Publish VS Code Extensions` workflow and select `archive` as the publish target.
+This will build and package all extensions (including external builtins), and create a `vscode-builtin-extensions-<version>.tar.gz` archive that can be downloaded from the workflow artifacts.
+
+Alternatively, you can create the archive locally (e.g. for testing):
 
     npm run package-vsix
     npm run get-external-builtins
@@ -117,7 +120,6 @@ check out the correct version of VS Code upon `git submodule update`. The conven
 
 Publishing is done using GitHub Actions. In the vscode-builtin-extensions repo, a publish token for open-vsx.org has been set, that can be used to publish under the identity of the openvsx publish bot.
 
-Building and optionally publishing the extensions is done through the `Build and Publish VS Code Extensions` workflow.
-On any pull request and push to the `master` branch, the workflow will build and package all VS Code extensions to ensure that the build scripts still work as expected.
+On any pull request and push to the `master` branch, the `Build VS Code Extensions` workflow will build and package all VS Code extensions to ensure that the build scripts still work as expected.
 
-Triggering the workflow through the GitHub UI using the `workflow_dispatch` trigger will additionally publish the built extensions to open-vsx.
+To publish, use the `Publish VS Code Extensions` workflow and select `open-vsx` as the publish target. This will build the extensions, create the extension pack, and publish everything to open-vsx.org.
