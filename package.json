@@ -8,6 +8,7 @@
         "bundle:extensions": "cross-env NODE_OPTIONS=--max-old-space-size=8192 node ./src/bundle.js",
         "publish:vsix": "node ./src/publish-vsix.js",
         "package-vsix": "node ./src/package-vsix.js",
+        "compress-vsix": "node ./src/compress-vsix.js",
         "create-extension-pack": "node src/create-extension-pack.js",
         "checkout-latest-vscode-release": "node src/checkout-latest-vscode.js",
         "get-external-builtins": "node src/get-external-builtins.js",
@@ -16,8 +17,7 @@
         "ip-check:builtin": "node ./src/check-dependencies.js --dir vscode/extensions",
         "ip-check:external": "node ./src/check-dependencies.js --dir external-builtins",
         "archive:builtin": "node ./src/archive-source.js --mode builtin",
-        "archive:external": "node ./src/archive-source.js --mode external",
-        "theia:testing": "node ./src/theia-testing.js"
+        "archive:external": "node ./src/archive-source.js --mode external"
     },
     "devDependencies": {
         "@types/archiver": "^3.0.0",

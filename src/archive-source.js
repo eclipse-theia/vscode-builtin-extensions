@@ -61,7 +61,7 @@ async function archiveExternal() {
      * @type ProductBuiltInExtensionEntry[]
     */
     const prodJsonExts = JSON.parse(content).builtInExtensions || [];
-    const entries= new Map();
+    const entries = new Map();
 
     for (ext of prodJsonExts) {
         const names = ext.repo.split("/");
@@ -98,7 +98,7 @@ async function archiveBuiltins() {
     const { execa } = await import('execa');
 
     process.stdout.write('cleaning vscode directory...\n');
-    execa('git', ['clean', '-xfd'], {
+    await execa('git', ['clean', '-xfd'], {
         cwd: vscode()
     });
 
