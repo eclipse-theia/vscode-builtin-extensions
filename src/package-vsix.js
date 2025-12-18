@@ -132,7 +132,7 @@ const repository = {
         pck.license = 'SEE LICENSE IN LICENSE-vscode.txt';
         const engine = pck.engines.vscode;
         // Correct invalid semantic engine version
-        if (typeof(engine) === 'string') {
+        if (typeof (engine) === 'string') {
             pck.engines.vscode = engine.replace('x', '0');
         }
 
@@ -150,7 +150,8 @@ const repository = {
         pck.scripts = {};
 
         const extLicense = extensions(extension, 'LICENSE-vscode.txt');
-        console.log('packaging vsix: ', pck.name, ' ...');
+        const vsixFilename = `${pck.publisher}.${pck.name}.vsix`;
+        console.log(`packaging vsix: ${vsixFilename}`);
         try {
             fs.writeFileSync(pckPath, JSON.stringify(pck, undefined, 2), 'utf-8');
             fs.writeFileSync(readmePath, readmeContent, 'utf-8');
@@ -158,13 +159,13 @@ const repository = {
             // await run(vsce, ['package', '--yarn', '-o', dist()], extensions(extension));
             await vsce.createVSIX({
                 'cwd': extensions(extension),
-                'packagePath': dist(),
+                'packagePath': dist(vsixFilename),
                 'useYarn': false,
                 'allowStarActivation': true
             });
-            result.push('successfully packaged: ' + pck.name);
+            result.push(`successfully packaged: ${vsixFilename}`);
         } catch (e) {
-            result.push('failed to packaged: ' + pck.name);
+            result.push(`failed to package: ${vsixFilename}`);
             if (e) {
                 console.error(e)
             };

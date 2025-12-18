@@ -6,4 +6,5 @@ external-builtins/
 vscode-builtin-extensions
 dash-licenses.jar
 *.zip
+*.tar.gz
 summary.txt

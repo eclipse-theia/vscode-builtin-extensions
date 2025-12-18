@@ -54,9 +54,34 @@ is not included.
 > In order to produce self-contained extensions, we need to include those modules (at the time, it's the typescript language server) into the packaged extensions (currently for `typescript-language-features` and `html-language-features`).
 > The code doing this is located in `src/package-vsix.js`. We also need to patch the `typescript-language-features` extension because it contains a hard-code reference to `../node_modules`.
 
+### External built-in extensions
+
+In addition to the extensions in the VS Code repository, VS Code includes some "external" built-in extensions (e.g., `ms-vscode.js-debug`).
+These are not developed as part of the VS Code repository but are included in the VS Code product.
+They are defined in the `product.json` file at the root of the VS Code repository.
+
+To fetch the external built-in extensions:
+
+    npm run get-external-builtins
+
+This will:
+
+- Clone the repositories into the `external-builtins/` directory and check out the version tags that match the current VS Code baseline (needed for IP checks and source archives)
+- Download the pre-built `.vsix` files from open-vsx.org into the `dist/` folder
+
 ### Creating the built-ins extension-pack
 
 We also create an extension pack from the internal and external built-ins into the `dist` folder with a package script.
 The file name will be of the form: `builtin-extension-pack-<vscode version>.vsix`.
 
     npm run create-extension-pack
+
+### Creating a compressed archive
+
+To create a `tar.gz` archive containing all packaged `.vsix` files (for self-hosting):
+
+    npm run compress-vsix
+
+This creates a `vscode-builtin-extensions-<version>.tar.gz` file in the repository root containing all `.vsix` files from `dist/`.
+
+See [Publishing.md](./Publishing.md#alternative-self-hosting-via-github-releases) for more details on self-hosting.

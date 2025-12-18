@@ -18,12 +18,18 @@
 
 /**
  * Clone and check-out the vscode external builtin extensions repositories, each to the version
- * that's expected for the current vscode baseline (as defined in vscode's product.json)
+ * that's expected for the current vscode baseline (as defined in vscode's product.json).
+ * 
+ * Also downloads the pre-built .vsix files from open-vsx.org into the dist/ folder.
  */
-const { run, externalBuiltinsRepos, vscode } = require('./paths.js');
+const { run, externalBuiltinsRepos, vscode, dist } = require('./paths.js');
 const fs = require('fs-extra');
+const fetch = require('node-fetch');
 const colors = require('colors');
 colors.enable();
+
+const OPEN_VSX_ORG_URL = 'https://open-vsx.org';
+
 /** run log */
 var log = [];
 
@@ -39,6 +45,7 @@ async function CloneCheckoutExternalBuiltins() {
     */
     const prodJsonExts = JSON.parse(content).builtInExtensions;
 
+    // Clone and checkout repos (for IP checks / source archive)
     for (const entry of prodJsonExts) {
         // extract repo directory name from last part of git repo URL
         const repoName = entry.repo.split("/").slice(-1)[0];
@@ -59,15 +66,85 @@ async function CloneCheckoutExternalBuiltins() {
             console.info(`checking-out: ${repoName} version: ${versionTag}`);
             await checkout(versionTag, externalBuiltinsRepos(repoName));
             log.push(`Successfully checked-out: ${versionTag}`.green);
-            
-        } catch (error) { 
+
+        } catch (error) {
             console.error(error);
             log.push(error.shortMessage.red);
         }
     }
-    console.info("---------------------")
-    console.info("Summary:")
-    log.forEach( (e) => console.info(`- ${e}`) );
+
+    // Download pre-built vsix files from open-vsx.org
+    console.info("\n---------------------");
+    console.info("Downloading .vsix files from open-vsx.org...\n");
+
+    if (!fs.existsSync(dist())) {
+        fs.mkdirSync(dist());
+    }
+
+    for (const ext of prodJsonExts) {
+        await downloadVsix(ext);
+    }
+
+    console.info("---------------------");
+    console.info("Summary:");
+    log.forEach((e) => console.info(`- ${e}`));
+}
+
+/**
+ * Download a .vsix file from open-vsx.org
+ * @param {ProductBuiltInExtensionEntry} ext
+ */
+async function downloadVsix(ext) {
+    const [publisher, name] = ext.name.split('.');
+    const version = ext.version;
+    const vsixFileName = `${publisher}.${name}.vsix`;
+    const vsixPath = dist(vsixFileName);
+
+    if (fs.existsSync(vsixPath)) {
+        console.info(`Already exists: ${vsixFileName}`);
+        log.push(`Skipped download (exists): ${vsixFileName}`);
+        return;
+    }
+
+    console.info(`Downloading ${ext.name}@${version}...`);
+
+    try {
+        const apiUrl = `${OPEN_VSX_ORG_URL}/api/${publisher}/${name}/${version}`;
+        const apiResponse = await fetch(apiUrl);
+
+        if (!apiResponse.ok) {
+            const msg = `Failed to fetch metadata: ${apiResponse.status}`;
+            console.error(`  ${msg}`);
+            log.push(`${vsixFileName}: ${msg}`.red);
+            return;
+        }
+
+        const metadata = await apiResponse.json();
+        const downloadUrl = metadata.files?.download;
+
+        if (!downloadUrl) {
+            const msg = 'No download URL found';
+            console.error(`  ${msg}`);
+            log.push(`${vsixFileName}: ${msg}`.red);
+            return;
+        }
+
+        const vsixResponse = await fetch(downloadUrl);
+        if (!vsixResponse.ok) {
+            const msg = `Failed to download: ${vsixResponse.status}`;
+            console.error(`  ${msg}`);
+            log.push(`${vsixFileName}: ${msg}`.red);
+            return;
+        }
+
+        const buffer = await vsixResponse.buffer();
+        fs.writeFileSync(vsixPath, buffer);
+        console.info(`  Saved: ${vsixFileName}`);
+        log.push(`Downloaded: ${vsixFileName}`.green);
+    } catch (error) {
+        console.error(`  Error: ${error.message}`);
+        log.push(`${vsixFileName}: ${error.message}`.red);
+    }
 }
 
 /**

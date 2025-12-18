@@ -34,9 +34,9 @@ Open an issue that looks like this: <https://gitlab.eclipse.org/eclipsefdn/emo-t
 
 ## IP checks for external VS Code built-ins
 
-We now have to perform the IP checks for the "external builtins". These are extensions which are not developed as part of the VS code repository, but which are still included as part of the
-VS Code product. They are described in the `product.json` file which lives at the root of the VS Code repository. There is a package script which will clone the relevant repos and check out
-the correct tag into a folder named `external-builtins`.
+We now have to perform the IP checks for the "external builtins". These are extensions which are not developed as part of the VS Code repository, but which are still included as part of the VS Code product. See [Building.md](./Building.md#external-built-in-extensions) for more details on what external built-ins are.
+
+First, fetch the external built-in repositories (if not yet done):
 
     npm run get-external-builtins
 
@@ -56,25 +56,40 @@ You can then drag the relevant zip into the gitlab issue.
 
 Building and packaging the built-ins is described in [Building.md](./Building.md).
 
+## Publish built-in extensions as VSIX archive
+
+As an alternative to publishing on open-vsx.org, you can compress all packaged `.vsix` files into a single `tar.gz` archive for self-hosting (e.g., on GitHub Releases).
+
+You can create the archive locally:
+
+    npm run package-vsix
+    npm run get-external-builtins
+    npm run compress-vsix
+
+This creates a `vscode-builtin-extensions-<version>.tar.gz` file in the repository root containing all `.vsix` files from `dist/`.
+
 ## Testing
 
 This section assumes you have a local clone of the [main Theia repo](https://github.com/eclipse-theia/theia). Please refer to the Theia documentation for instructions on how to build and
 run Theia. Some built-ins may refuse to run if the VS Code API version reported by Theia is lower that what they require. If Theia's default API version has not been updated yet, you can
 force a newer version by either setting the `VSCODE_API_VERSION` environment variable or by passing the option `--vscode-api-version <major>.<minor>.<patch>`
 
-The following script will unzip the packaged .vsix extensions, rename them and copy them to your plugins folder (e.g., could be `~/git/theia/theia/plugins/`).
-Theia does not extract .vsix files on startup anymore, this is handled bei de plugin download currently.
+To test this quickly, complete the previous step and create a draft or pre GH release and upload the tar.gz file.
+Then, update the theiaPlugin url to the new version in the main `package.json` in the theia repo, e.g.:
 
-    npm run theia:testing <YOUR THEIA PLUGINS FOLDER>
+    "theiaPlugins": {
+        "vscode-builtin-extensions": "https://github.com/eclipse-theia/vscode-builtin-extensions/releases/download/1.104.0/vscode-builtin-extensions-1.104.0.tar.gz",
+        ...
+    }
 
-_Note:_  The ones that are currently excluded by theia via `theiaPluginsExcludeIds`, like `github-authentication`, are skipped in this script as well.
-
-Rebuild the example and start Theia:
+Build the example, download the plugins and start Theia:
 
     npm ci && npm run build
+    rm -rf plugins
+    npm run download:plugins
     npm run start:browser OR npm run start:electron
 
-Note that startup will take a bit longer than usual while Theia unzips the *.vsix files to `~/.theia/deployedPlugins`.
+Test plan:
 
 - [ ] In case of browser example: Connect to `localhost:3000` with a browser
 - [ ] Observe backend log for new exceptions, specially during activation of builtin extensions
