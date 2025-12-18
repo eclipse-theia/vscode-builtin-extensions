@@ -1,6 +1,6 @@
-name: Build and Publish VS Code Extensions
+name: Build VS Code Extensions
 on:
-  workflow_dispatch:
+  workflow_call:
   push:
     branches:
       - master
@@ -10,13 +10,12 @@ on:
 env:
   NODE_OPTIONS: --max-old-space-size=8192
 jobs:
-  linux:
+  build:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      OVSX_PAT: ${{ secrets.OVSX_PAT}}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
       - run: |
           git submodule init
           git submodule update
@@ -30,20 +29,19 @@ jobs:
           sudo update-rc.d xvfb defaults
           sudo service xvfb start
         name: Setup Build Environment
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: vscode/.nvmrc
-      - name: Check ovsx version
-        run: npx ovsx --version
       - name: Bundle Extensions
         run: |
           npm i
           npm run build:extensions
       - name: Package Solid Version of Extensions
         run: npm run package-vsix
-      - name: Create built-in extensions pack
-        run: npm run create-extension-pack
-      # Only publish the extensions if the workflow was manually triggered
-      - if: ${{ github.event_name == 'workflow_dispatch' }}
-        name: Publish Extensions to open-vsx.org
-        run: npm run publish:vsix
+      - name: Upload dist artifacts
+        if: github.event_name == 'workflow_call'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7

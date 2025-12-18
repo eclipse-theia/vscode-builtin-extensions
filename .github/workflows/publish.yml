@@ -1,0 +1,80 @@
+name: Publish VS Code Extensions
+on:
+  workflow_dispatch:
+    inputs:
+      publish_target:
+        description: 'Publish target'
+        required: true
+        type: choice
+        options:
+          - open-vsx
+          - archive
+env:
+  NODE_OPTIONS: --max-old-space-size=8192
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  publish-openvsx:
+    if: ${{ github.event.inputs.publish_target == 'open-vsx' }}
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
+    steps:
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+      - run: |
+          git submodule init
+          git submodule update
+        name: Checkout VS Code
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: vscode/.nvmrc
+      - name: Install dependencies
+        run: npm i
+      - name: Download dist artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: dist
+          path: dist/
+      - name: Check ovsx version
+        run: npx ovsx --version
+      - name: Create built-in extensions pack
+        run: npm run create-extension-pack
+      - name: Publish Extensions to open-vsx.org
+        run: npm run publish:vsix
+
+  publish-archive:
+    if: ${{ github.event.inputs.publish_target == 'archive' }}
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+      - run: |
+          git submodule init
+          git submodule update
+        name: Checkout VS Code
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: vscode/.nvmrc
+      - name: Install dependencies
+        run: npm i
+      - name: Download dist artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: dist
+          path: dist/
+      - name: Get external builtins
+        run: npm run get-external-builtins
+      - name: Compress VSIX files
+        run: npm run compress-vsix
+      - name: Upload archive artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: vscode-builtin-extensions-archive
+          path: vscode-builtin-extensions-*.tar.gz
+          retention-days: 7
