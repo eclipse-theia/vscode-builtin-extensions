@@ -71,7 +71,7 @@ jobs:
       - name: Get external builtins
         run: npm run get-external-builtins
       - name: Compress VSIX files
-        run: npm run compress-vsix
+        run: npm run compress-vsix 2>&1 | tee compress-vsix.log
       - name: Upload archive artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -83,9 +83,25 @@ jobs:
       - name: Create GitHub release
         shell: bash
         run: |
+          COMPRESS_LOG=$(cat compress-vsix.log)
+          cat > release-notes.md <<EOF
+          VS Code built-in extensions v${{ env.VSCODE_VERSION }} including external built-ins (defined in VS Code's product.json, under the namespace ms-vscode)
+
+          IP checks were completed:
+          - <!-- Add IP check links here -->
+
+          <details>
+          <summary>Contents</summary>
+
+          ${COMPRESS_LOG}
+
+          </details>
+          EOF
+          # Remove leading whitespace added by indentation
+          sed -i 's/^          //' release-notes.md
           gh release create "${{ env.VSCODE_VERSION }}" \
             --title "VS Code built-in extensions ${{ env.VSCODE_VERSION }}" \
-            --notes "VS Code built-in extensions v${{ env.VSCODE_VERSION }} including external built-ins (defined in VS Code's product.json, under the namespace ms-vscode)" \
+            --notes-file release-notes.md \
             --target ${{ github.sha }} \
             vscode-builtin-extensions-${{ env.VSCODE_VERSION }}.tar.gz
         env:
