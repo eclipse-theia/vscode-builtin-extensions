@@ -78,3 +78,15 @@ jobs:
           name: vscode-builtin-extensions-archive
           path: vscode-builtin-extensions-*.tar.gz
           retention-days: 7
+      - name: Get VS Code version
+        run: echo "VSCODE_VERSION=$(node -p "require('./vscode/package.json').version")" >> $GITHUB_ENV
+      - name: Create GitHub release
+        shell: bash
+        run: |
+          gh release create "${{ env.VSCODE_VERSION }}" \
+            --title "VS Code built-in extensions ${{ env.VSCODE_VERSION }}" \
+            --notes "VS Code built-in extensions v${{ env.VSCODE_VERSION }} including external built-ins (defined in VS Code's product.json, under the namespace ms-vscode)" \
+            --target ${{ github.sha }} \
+            vscode-builtin-extensions-${{ env.VSCODE_VERSION }}.tar.gz
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
