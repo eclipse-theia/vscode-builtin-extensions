@@ -23,12 +23,11 @@
  * Also downloads the pre-built .vsix files from open-vsx.org into the dist/ folder.
  */
 const { run, externalBuiltinsRepos, vscode, dist } = require('./paths.js');
+const { OPEN_VSX_ORG_URL } = require('./version.js');
 const fs = require('fs-extra');
 const fetch = require('node-fetch');
 const colors = require('colors');
 colors.enable();
-
-const OPEN_VSX_ORG_URL = 'https://open-vsx.org';
 
 /** run log */
 var log = [];

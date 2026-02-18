@@ -47,4 +47,4 @@ async function isPublished(version, extension, namespace = 'vscode') {
     }
 }
 
-module.exports = { isPublished, resolveVscodeVersion };
+module.exports = { isPublished, resolveVscodeVersion, OPEN_VSX_ORG_URL };
