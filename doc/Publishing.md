@@ -77,7 +77,24 @@ This section assumes you have a local clone of the [main Theia repo](https://git
 run Theia. Some built-ins may refuse to run if the VS Code API version reported by Theia is lower that what they require. If Theia's default API version has not been updated yet, you can
 force a newer version by either setting the `VSCODE_API_VERSION` environment variable or by passing the option `--vscode-api-version <major>.<minor>.<patch>`
 
-To test this quickly, complete the previous step and create a draft or pre GH release and upload the tar.gz file.
+To test this quickly, you can either serve the archive locally or upload it to GitHub first:
+
+A. Serving the archive locally, execute this in the root directory:
+
+    python3 -m http.server 8080
+
+Update the theiaPlugin url to the local archive URL in the main `package.json` in the theia repo, e.g.:
+
+    "theiaPlugins": {
+        "vscode-builtin-extensions": "http://localhost:8080/vscode-builtin-extensions-1.108.2.tar.gz",
+        ...
+    }
+
+Replace `<filename>` with the actual archive name (e.g., `vscode-builtin-extensions-1.108.2.tar.gz`).
+
+B. Using a GitHub draft release
+
+Alternatively, draft or pre GH release and upload the tar.gz file.
 Then, update the theiaPlugin url to the new version in the main `package.json` in the theia repo, e.g.:
 
     "theiaPlugins": {
@@ -85,7 +102,7 @@ Then, update the theiaPlugin url to the new version in the main `package.json` i
         ...
     }
 
-Build the example, download the plugins and start Theia:
+Then, build the example, download the plugins and start Theia:
 
     npm ci && npm run build
     rm -rf plugins

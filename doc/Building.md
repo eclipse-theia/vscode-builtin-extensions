@@ -84,4 +84,4 @@ To create a `tar.gz` archive containing all packaged `.vsix` files (for self-hos
 
 This creates a `vscode-builtin-extensions-<version>.tar.gz` file in the repository root containing all `.vsix` files from `dist/`.
 
-See [Publishing.md](./Publishing.md#alternative-self-hosting-via-github-releases) for more details on self-hosting.
+See [Publishing.md](./Publishing.md#alternative-self-hosting-via-github-releases) for more details on local testing or self-hosting.
