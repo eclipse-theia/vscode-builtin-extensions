@@ -4,8 +4,8 @@
     "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
     "scripts": {
         "build:extensions": "npm --prefix vscode install && yarn compile:extensions && yarn bundle:extensions",
-        "compile:extensions": "cross-env NODE_OPTIONS=--max-old-space-size=8192 node ./src/compile.js",
-        "bundle:extensions": "cross-env NODE_OPTIONS=--max-old-space-size=8192 node ./src/bundle.js",
+        "compile:extensions": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192 --experimental-strip-types\" node ./src/compile.js",
+        "bundle:extensions": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192 --experimental-strip-types\" node ./src/bundle.js",
         "publish:vsix": "node ./src/publish-vsix.js",
         "package-vsix": "node ./src/package-vsix.js",
         "compress-vsix": "node ./src/compress-vsix.js",

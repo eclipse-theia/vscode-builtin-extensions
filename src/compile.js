@@ -26,8 +26,7 @@ if (process.cwd() !== vscode()) {
 }
 
 async function compileExtensions() {
-    // @ts-ignore
-    const { compileAllExtensionsBuildTask, compileExtensionMediaTask, compileWebExtensionsTask } = require('../vscode/build/gulpfile.extensions.js')
+    const { compileAllExtensionsBuildTask, compileExtensionMediaTask, compileWebExtensionsTask } = await import('../vscode/build/gulpfile.extensions.ts');
     await createMissingLockFiles(vscodeExtensions());
     compileAllExtensionsBuildTask();
     compileWebExtensionsTask();

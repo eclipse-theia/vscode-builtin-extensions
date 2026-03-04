@@ -17,11 +17,11 @@
 // @ts-check
 const rimraf = require('../vscode/node_modules/rimraf');
 const vfs = require('../vscode/node_modules/vinyl-fs');
-const ext = require('../vscode/build/lib/extensions');
 const { theiaExtension, extensions, run } = require('./paths.js');
 
 rimraf.sync(extensions());
 (async () => {
+    const ext = await import('../vscode/build/lib/extensions.ts');
     await new Promise((resolve, reject) => {
         ext.packageAllLocalExtensionsStream(false, false)
             .pipe(vfs.dest(theiaExtension()))
