@@ -103,6 +103,7 @@ jobs:
             --title "VS Code built-in extensions ${{ env.VSCODE_VERSION }}" \
             --notes-file release-notes.md \
             --target ${{ github.sha }} \
-            vscode-builtin-extensions-${{ env.VSCODE_VERSION }}.tar.gz
+            vscode-builtin-extensions-${{ env.VSCODE_VERSION }}.tar.gz \
+            dist/*.vsix
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
